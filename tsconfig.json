@@ -1,0 +1,34 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"module": "commonjs",
+		"lib": [
+			"es6"
+		],
+		"allowJs": true,
+		"outDir": "out",
+		"rootDir": "src",
+		"strict": true,
+		"esModuleInterop": true,
+		"types": [
+			"node"
+		],
+		"sourceMap": true,
+		"skipLibCheck": true
+	},
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"src/**/*.d.ts",
+		"node_modules"
+	],
+	"paths": {
+		"~/*": [
+			"src/*"
+		],
+		"@/*": [
+			"*"
+		],
+	}
+}
