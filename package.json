@@ -33,6 +33,7 @@
   },
   "workspaces": [
     "src/smart-client",
-    "src/fhir-client"
+    "src/fhir-client",
+    "src/fhir-validator"
   ]
 }

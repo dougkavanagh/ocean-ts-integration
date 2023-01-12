@@ -4,7 +4,7 @@ import { ClientLaunchState, ErrorMessage, isErrorMessage } from "./smart-util";
 import { CLIENT_ID, lookup, redirectUrl } from "./config";
 import logger from "./logger";
 import { verifyJwt } from "./session-service";
-import { CLIENT_SECRET } from "../env";
+import { CLIENT_SECRET } from "./env";
 
 custom.setHttpOptionsDefaults({
   timeout: 60000,

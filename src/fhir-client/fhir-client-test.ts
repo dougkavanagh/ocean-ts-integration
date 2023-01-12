@@ -16,7 +16,7 @@ import {
   CLIENT_ID as clientId,
   CLIENT_SECRET as clientSecret,
   APPOINTMENT_ID,
-} from "../env";
+} from "./env";
 import { Response } from "node-fetch";
 
 export async function testConfirmAppointment() {
@@ -89,8 +89,8 @@ async function setReferralRedirect(bearerToken: string) {
       {
         url: "https://ocean.cognisantmd.com/ext-ocean-third-party-redirect-url",
         valueUri: "https://www.google.com",
-      }
-    ]
+      },
+    ],
   });
   const header = createMessageHeader({
     msgType: "notify-update-status",

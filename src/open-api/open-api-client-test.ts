@@ -6,7 +6,7 @@ import {
   saveReferralAttachment,
   SiteCreds,
 } from "./open-api-client";
-import { getSiteCreds, REFERRAL_REF } from "../env";
+import { getSiteCreds, REFERRAL_REF } from "./env";
 import {
   decryptReferralOneTimeKey,
   encryptObject,

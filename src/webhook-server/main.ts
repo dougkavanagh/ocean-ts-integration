@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { PORT } from "../env";
+import { PORT } from "./env";
 const app = express();
 
 app.use(express.json());
@@ -38,5 +38,5 @@ router.post("", async (req: Request, res: Response): Promise<void> => {
 app.use("/", router);
 
 app.listen(PORT, () => {
-  console.log(`Webhook server is listening at http://localhost:${port}`);
+  console.log(`Webhook server is listening at http://localhost:${PORT}`);
 });
