@@ -12,4 +12,3 @@ if (result.errors.length > 0) {
 } else {
   console.log("Valid FHIR!");
 }
-//

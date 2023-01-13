@@ -4,8 +4,8 @@ This project assists third parties integrating with Ocean using any of the follo
 
 - [Ocean FHIR API](https://ocean.cognisantmd.com/public/fhirApiDocs.html)
 - [Ocean Open API](https://ocean.cognisantmd.com/public/apiDocs.html)
-- SMART on FHIR (using Ocean as a SMART client application)
-- Ocean Cloud Connect's FHIR Protocol
+- [SMART on FHIR (using Ocean as a SMART client application)](https://support.cognisantmd.com/hc/en-us/articles/360057458272-Ocean-SMART-App-Launch-Overview-SMART-on-FHIR-EHR-Contextual-Launch-)
+- [Ocean Cloud Connect's FHIR Protocol](<(https://simplifier.net/ocean-cloud-connect-fhir-implementation-guide)>)
 
 The project consists of a series of reference implementations and test stubs.
 
@@ -26,6 +26,15 @@ This project has several different semi-independent modules for testing Ocean in
 
 The FHIR client can be used to authorize and issue RESTful calls against Ocean's [FHIR API](<[https://](https://ocean.cognisantmd.com/public/fhirApiDocs.html)>), particularly the "incoming message" API [$process-message](https://ocean.cognisantmd.com/public/fhirApiDocs.html#operation/process-messages_1) POST endpoint for updating Ocean eReferrals, eConsults, eOrders. The FHIR client can also be used to interact with Ocean's health service directory.
 
+### src/smart-client: SMART Server Testing
+
+This module can be used to test your SMART launch server (EHR/EMR) as if it would launch Ocean as a SMART OIDC client application, as described in the documentation guide:
+[Ocean SMART App Launch Overview](<[https://](https://support.cognisantmd.com/hc/en-us/articles/360057458272-Ocean-SMART-App-Launch-SMART-on-FHIR-EHR-Contextual-Launch-)>)
+
+## src/webhook-server: Webhook Testing for FHIR API Messages and Open API Events
+
+Ocean sends "push" messages to an integrated server when certain events occur. This module can be used as a prototype for your server to test the protocols and content of these messages.
+
 ## src/fhir-validator: FHIR Resource Validation
 
 The FHIR validator can be used to validate specific JSON payloads during testing to ensure they are adherent to the FHIR R4 specification as used by Ocean.
@@ -35,15 +44,6 @@ Although there are many FHIR validators available online, it may be difficult to
 ## src/open-api: Ocean Open API Client
 
 This module can be used to test the Ocean Open API. Note that the Ocean Open API is deprecated; use the FHIR API instead. The source code here is included for the sake of supporting legacy implementations.
-
-### src/smart-client: SMART Server Testing
-
-This module can be used to test your SMART launch server (EHR/EMR) as if it would launch Ocean as a SMART OIDC client application, as described in the documentation guide:
-[Ocean SMART App Launch Overview](<[https://](https://support.cognisantmd.com/hc/en-us/articles/360057458272-Ocean-SMART-App-Launch-SMART-on-FHIR-EHR-Contextual-Launch-)>)
-
-## src/webhook-server: Webhook Testing
-
-Ocean sends "push" messages to an integrated server when certain events occur. This module can be used as a prototype for your server to test the protocols and content of these messages.
 
 ## src/cloud-connect: Test your Cloud Connect-compatible FHIR server
 
