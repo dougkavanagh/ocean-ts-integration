@@ -1,9 +1,11 @@
 ### Test your SMART launch server
 
-The SMART client can be used to test your SMART launch server, as described in the documentation guide:
-[Ocean SMART App Launch Overview](<[https://](https://support.cognisantmd.com/hc/en-us/articles/360057458272-Ocean-SMART-App-Launch-SMART-on-FHIR-EHR-Contextual-Launch-)>)
+This SMART client behaves similarly to Ocean's SMART client application, particularly with the network sequence flow described in the documentation guide:
+[Ocean SMART App Launch Overview](https://support.cognisantmd.com/hc/en-us/articles/360057458272-Ocean-SMART-App-Launch-SMART-on-FHIR-EHR-Contextual-Launch-)
 
-Configuring a SMART OIDC-compatible server can be complex. This test client can help you test and debug against your SMART launch server. It simulates the launch sequence that your EHR will perform and then, once launched, behaves like Ocean as a standard OIDC client to execute the single sign-on and authorization flow, followed by RESTful SMART FHIR API calls using the access token provided by your server.
+Configuring a SMART OIDC-compatible server can be complex. This SMART client can be used to test against your SMART launch server, to ensure that it is configured correctly and that it is able to (potentially) successfully launch with single sign-on into Ocean using the EHR user credentials via OIDC.
+
+The client simulates the launch sequence that your EHR will perform; then, once launched, like Ocean, it acts as a standard OIDC client to execute the single sign-on and authorization flow. Once the sign-in complete, it proceeds to query the FHIR server's API calls using the access token provided by the SMART server.
 
 #### Setup
 

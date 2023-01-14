@@ -46,6 +46,7 @@ const handler: RequestHandler = async (
           "fhirUser",
           "patient/Patient.read",
           "patient/Observation.read",
+          "patient/$everything",
           "user/*.*",
           "user/Practitioner.read",
         ].join(" "),
