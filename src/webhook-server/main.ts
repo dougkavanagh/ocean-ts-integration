@@ -1,8 +1,11 @@
 import express, { Request, Response } from "express";
+import bodyParser from "body-parser";
 import { PORT } from "./env";
 const app = express();
-
-app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  bodyParser.json({ type: ["application/fhir+json", "application/json"] })
+);
 
 app.use(
   express.json({
@@ -19,8 +22,10 @@ router.get("", (_, res: Response) => {
 });
 
 router.post("", async (req: Request, res: Response): Promise<void> => {
-  console.info(`Received webhook POST: ${req.body}`);
-  const { challenge } = req.body;
+  const body = req.body;
+  console.info(`Received webhook POST:`);
+  console.info(JSON.stringify(body));
+  const { challenge } = body;
   if (challenge) {
     console.info(
       "Received webhook challenge request; echoing back " + challenge
@@ -29,7 +34,7 @@ router.post("", async (req: Request, res: Response): Promise<void> => {
       challenge: challenge,
     });
   } else {
-    console.info("Received service request payload");
+    console.info("Received eReferral payload");
     res.status(200).type("application/json").send({
       success: true,
     });
