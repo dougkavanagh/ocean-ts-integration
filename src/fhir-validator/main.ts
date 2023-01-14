@@ -8,7 +8,7 @@ const instance = JSON.parse(
 );
 const result = v.validate(instance, schema);
 if (result.errors.length > 0) {
-  console.error(result.errors);
+  console.error(JSON.stringify(result.errors));
 } else {
   console.log("Valid FHIR!");
 }

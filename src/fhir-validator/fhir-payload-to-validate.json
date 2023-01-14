@@ -1,9 +1,0 @@
-{
-  "resourceType": "Patient",
-  "name": [
-    {
-      "family": "Chalmers",
-      "given": ["ExampleName"]
-    }
-  ]
-}
