@@ -23,7 +23,7 @@ router.get("", (_, res: Response) => {
 
 router.post("", async (req: Request, res: Response): Promise<void> => {
   const body = req.body;
-  console.info(`Received webhook POST:`);
+  console.info(`Webhook POST:`);
   console.info(JSON.stringify(body));
   const { challenge } = body;
   if (challenge) {
@@ -33,10 +33,16 @@ router.post("", async (req: Request, res: Response): Promise<void> => {
     res.status(200).type("application/json").send({
       challenge: challenge,
     });
-  } else {
-    console.info("Received eReferral payload");
+  } else if (body.resourceType === "Bundle") {
+    console.info("Received eReferral Bundle payload");
+    // https://simplifier.net/guide/ca-on-eReferral-r4-iguide-v0.10.1/allartifacts?version=current
     res.status(200).type("application/json").send({
       success: true,
+    });
+  } else {
+    console.info("Received unexpected payload");
+    res.status(400).type("application/json").send({
+      success: false,
     });
   }
 });
