@@ -141,7 +141,7 @@ function checkForOceanSharedEncryptionKey(tokenSet: TokenSet) {
     tokenSet.claims().oceanSharedEncryptionKey) as string;
   if (!oceanSharedEncryptionKeyEncoded) {
     logger.warn(
-      `Warning: No oceanSharedEncryptionKey value was found in token or token claims. It is not mandatory, but strongly recommended, so that Ocean can automatically populate the shared encryption key in the browser for users.`
+      `Warning: The oceanSharedEncryptionKey Base64 value was not found in token or the token claims. It is not mandatory, but it s strongly recommended. Ocean uses it to automatically populate the shared encryption key in the browser for users.`
     );
     return;
   }
