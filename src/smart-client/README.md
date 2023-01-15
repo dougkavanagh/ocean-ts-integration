@@ -45,9 +45,9 @@ The program will generate a suggested launch URL, simulating what your EHR would
 
 Once OIDC's validation is successful, the client checks for the presence of additional values in the token that are relevant to Ocean, specifically:
 
-- sub (the user's unique identifier, used in combination with the issuer to uniquely identify the user and link the Ocean user account for single sign-on)
-- patient (if a patient context should be included in the launch)
-- oceanSharedEncryptionKey (a Base64 encoding of the shared encryption key password, to save users the hassle of entering the Ocean shared encryption key at their site in each user browser)
+- _sub_: the user's unique identifier, used in combination with the issuer to uniquely identify the user and link the Ocean user account for single sign-on)
+- _patient_: if a patient context should be included in the launch, this should match the EMR patient ID
+- _oceanSharedEncryptionKey_: as described in the Ocean SMART Launch Overview, this is a Base64 encoding of the shared encryption key password, to save users the hassle of entering the Ocean shared encryption key at their site in each user browser.
 
 #### Step 7: FHIR Client Queries
 
