@@ -19,7 +19,7 @@ const handler: RequestHandler = async (
     }
 
     logger.info(
-      `checking OIDC support at ${issuerUrl} via openid-client's discover feature:`
+      `Checking OIDC support at ${issuerUrl} via openid-client's discover feature:`
     );
     const issuer: Issuer<Client> = await Issuer.discover(issuerUrl);
     logger.info(`Discovery was successful`);
