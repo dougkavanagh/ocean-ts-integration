@@ -41,6 +41,14 @@ The program will generate a suggested launch URL, simulating what your EHR would
 
 - The client then validates the id_token, which is a JWT token that contains the user's identity and other information. The client uses the "jwks_uri" endpoint defined in the openid-configuration to retrieve the public key used to sign the token, and then validates the signature and other claims (checkOIDC).
 
-#### Step 6: FHIR Client Queries
+#### Step 6: Ocean-specific Validation of token
+
+Once OIDC's validation is successful, the client checks for the presence of additional values in the token that are relevant to Ocean, specifically:
+
+- sub (the user's unique identifier, used in combination with the issuer to uniquely identify the user and link the Ocean user account for single sign-on)
+- patient (if a patient context should be included in the launch)
+- oceanSharedEncryptionKey (a Base64 encoding of the shared encryption key password, to save users the hassle of entering the Ocean shared encryption key at their site in each user browser)
+
+#### Step 7: FHIR Client Queries
 
 Once the OIDC validation is complete, the client will use the access token to make FHIR API calls to your server. Ocean will GET from the FHIR Patient endpoint and the Patient/$everything operation to retrieve and validate the patient's demographics and other information.
