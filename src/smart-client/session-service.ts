@@ -1,6 +1,5 @@
-
 import { JwtPayload, sign, SignOptions, verify } from "jsonwebtoken";
-import { SESSION_SECRET } from "./config";
+import { SESSION_SECRET } from "./allowed-issuers";
 import { ErrorMessage } from "./smart-util";
 
 export function verifyJwt(token: string): JwtPayload | ErrorMessage {

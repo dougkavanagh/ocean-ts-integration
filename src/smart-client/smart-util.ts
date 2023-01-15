@@ -1,4 +1,5 @@
-
+import { Request } from "express";
+import { REDIRECT_PATH } from "./env";
 
 export type ScopeType = "patient" | "user" | "system";
 export type AccessModifier = "read" | "write" | "*";
@@ -29,7 +30,7 @@ export interface SMARTServerConfig {
 }
 
 export type ClientLaunchState = {
-  issuerUrl: string
+  issuerUrl: string;
 };
 
 export class ErrorMessage {
@@ -54,4 +55,8 @@ export class ErrorMessage {
 }
 export function isErrorMessage(obj: any): obj is ErrorMessage {
   return obj && obj.message;
+}
+
+export function getRedirectUrl(req: Request): string {
+  return req.protocol + "://" + req.get("Host") + REDIRECT_PATH;
 }

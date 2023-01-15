@@ -1,8 +1,9 @@
 import { RequestHandler, NextFunction, Request, Response } from "express";
 import { signObject } from "./session-service";
 import { Issuer, Client } from "openid-client";
-import config from "./config";
-import { ClientLaunchState } from "./smart-util";
+import { ClientLaunchState, getRedirectUrl } from "./smart-util";
+import logger from "./logger";
+import { CLIENT_ID, REDIRECT_PATH } from "./env";
 
 // https://www.npmjs.com/package/openid-client
 
@@ -17,13 +18,13 @@ const handler: RequestHandler = async (
       throw "missing iss";
     }
 
-    const redirectUrl = config.redirectUrl;
-    console.log(
+    logger.info(
       `checking OIDC support at ${issuerUrl} via openid-client's discover feature:`
     );
     const issuer: Issuer<Client> = await Issuer.discover(issuerUrl);
-    console.log(`Discovery was successful`);
-    const clientId = config.CLIENT_ID;
+    logger.info(`Discovery was successful`);
+    const clientId = CLIENT_ID;
+    const redirectUrl = getRedirectUrl(req);
     const client = new issuer.Client({
       client_id: clientId,
       redirect_uris: [redirectUrl],
@@ -55,7 +56,7 @@ const handler: RequestHandler = async (
         state: signObject(state),
       })
       .replace("https://localhost", "http://localhost");
-    console.log(
+    logger.info(
       `Redirecting to SMART authorization endpoint at ${smartServerRedirectUrl}...`
     );
     res.redirect(smartServerRedirectUrl);

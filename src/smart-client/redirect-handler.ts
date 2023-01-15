@@ -1,10 +1,16 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { Client, custom, Issuer, TokenSet } from "openid-client";
-import { ClientLaunchState, ErrorMessage, isErrorMessage } from "./smart-util";
-import { CLIENT_ID, lookupIssuerInAllowlist, redirectUrl } from "./config";
+import {
+  ClientLaunchState,
+  ErrorMessage,
+  getRedirectUrl,
+  isErrorMessage,
+} from "./smart-util";
+import { lookupIssuerInAllowlist } from "./allowed-issuers";
 import logger from "./logger";
 import { verifyJwt } from "./session-service";
-import { CLIENT_SECRET } from "./env";
+import { CLIENT_ID, CLIENT_SECRET } from "./env";
+import { fhirR4 } from "@smile-cdr/fhirts";
 
 custom.setHttpOptionsDefaults({
   timeout: 60000,
@@ -23,6 +29,7 @@ const handler: RequestHandler = async (
         `Error returned from SMART server as part of the redirect: ${req.query.error}`
       );
     }
+
     if (!req.query.state) {
       return next(`Missing state parameter from SMART redirect`);
     }
@@ -59,7 +66,15 @@ const handler: RequestHandler = async (
       return next(`No access token returned from SMART server`);
     }
     await singleSignOnWithIdToken(tokenSet);
-    await fetchFhirResources(issuerUrl, tokenSet.access_token);
+    checkForOceanSharedEncryptionKey(tokenSet);
+    const patientId = checkForPatientContext(tokenSet);
+    if (patientId) {
+      await fetchFhirResources({
+        issuerUrl,
+        accessToken: tokenSet.access_token,
+        patientId,
+      });
+    }
     res.json({
       body: "SMART launch is complete",
       status: 200,
@@ -92,7 +107,7 @@ async function fetchAndValidateTokenWithOIDC(
   const params = client.callbackParams(req);
   try {
     // fetch the token with this SMART app's credentials and the authorization code
-    const tokenSet = await client.callback(redirectUrl, params, {
+    const tokenSet = await client.callback(getRedirectUrl(req), params, {
       state: req.query.state?.toString(),
     });
     // this client library automatically validates the token signature and
@@ -100,7 +115,9 @@ async function fetchAndValidateTokenWithOIDC(
     logger.info(`received and validated tokens for ${issuerUrl}`);
     return tokenSet;
   } catch (e: unknown) {
-    logger.error(`Error returned from SMART server while fetching token: ${e}`);
+    throw new Error(
+      `Error returned from SMART server while fetching token: ${e}`
+    );
   }
 }
 
@@ -119,25 +136,87 @@ async function singleSignOnWithIdToken(tokenSet: TokenSet) {
   return smartUserId;
 }
 
-async function fetchFhirResources(issuerUrl: string, accessToken: string) {
-  logger.info(`Fetching FHIR resources from ${issuerUrl}`);
-  const patient = await readFhirResource(issuerUrl + "/Patient", accessToken);
-  logger.info(`Patient.read: ${JSON.stringify(await patient.json())}`);
-  const everything = await readFhirResource(
-    issuerUrl + "/Patient/$everything",
-    accessToken
-  );
+function checkForOceanSharedEncryptionKey(tokenSet: TokenSet) {
+  const oceanSharedEncryptionKeyEncoded = (tokenSet.oceanSharedEncryptionKey ??
+    tokenSet.claims().oceanSharedEncryptionKey) as string;
+  if (!oceanSharedEncryptionKeyEncoded) {
+    logger.warn(
+      `Warning: No oceanSharedEncryptionKey value was found in token or token claims. It is not mandatory, but strongly recommended, so that Ocean can automatically populate the shared encryption key in the browser for users.`
+    );
+    return;
+  }
   logger.info(
-    `Patient/$everything: ${JSON.stringify(await everything.json())}`
+    `The provided value for the Base64-encoded oceanSharedEncryptionKey is: ${oceanSharedEncryptionKeyEncoded}`
+  );
+  const decodedOceanSharedEncryptionKey = atob(oceanSharedEncryptionKeyEncoded);
+  logger.info(
+    `The decoded oceanSharedEncryptionKey is: ${decodedOceanSharedEncryptionKey}`
   );
 }
 
-async function readFhirResource(url: string, accessToken: string) {
-  return await fetch(url, {
-    headers: {
-      Authorization: "Bearer " + accessToken,
-    },
+function checkForPatientContext(tokenSet: TokenSet): string | null {
+  if (tokenSet.patient && typeof tokenSet.patient === "string") {
+    return tokenSet.patient as string;
+  } else {
+    logger.info(
+      "No 'patient' ID string was found in the token; this is acceptable only if it is a launch WITHOUT patient context."
+    );
+    return null;
+  }
+}
+
+async function fetchFhirResources({
+  issuerUrl,
+  accessToken,
+  patientId,
+}: {
+  issuerUrl: string;
+  accessToken: string;
+  patientId: string;
+}) {
+  logger.info(`Fetching FHIR resources from ${issuerUrl}`);
+  await readFhirResource({
+    url: `${issuerUrl}/Patient/${patientId}`,
+    accessToken,
+    expectedResourceType: "Patient",
   });
+
+  await readFhirResource({
+    url: `${issuerUrl}/Patient/${patientId}/$everything`,
+    accessToken,
+    expectedResourceType: "Bundle",
+  });
+}
+
+async function readFhirResource({
+  url,
+  accessToken,
+  expectedResourceType,
+}: {
+  url: string;
+  accessToken: string;
+  expectedResourceType?: string;
+}): Promise<object> {
+  try {
+    logger.info(`Fetching from ${url}:`);
+    const resource = (await (
+      await fetch(url, {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      })
+    ).json()) as any;
+    if (resource.resourceType !== expectedResourceType) {
+      throw new Error(`FHIR resource ${url} is not a ${expectedResourceType}`);
+    }
+    logger.info(JSON.stringify(resource));
+    return resource;
+  } catch (error) {
+    logger.error(error);
+    throw new Error(
+      "Error when fetching FHIR resource from " + url + ": " + error
+    );
+  }
 }
 
 export default handler;

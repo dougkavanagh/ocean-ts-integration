@@ -43,4 +43,4 @@ The program will generate a suggested launch URL, simulating what your EHR would
 
 #### Step 6: FHIR Client Queries
 
-// PENDING: Once the OIDC validation is complete, the client can then use the access token to make FHIR API calls to your server. Ocean will read from the FHIR Patient endpoint to retrieve the patient's demographics and other information (with additional endpoints to be implemented in the future).
+Once the OIDC validation is complete, the client will use the access token to make FHIR API calls to your server. Ocean will GET from the FHIR Patient endpoint and the Patient/$everything operation to retrieve and validate the patient's demographics and other information.
