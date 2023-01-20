@@ -13,10 +13,8 @@ const handler: RequestHandler = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const issuerUrl = req.query.iss?.toString();
-    if (!issuerUrl) {
-      throw "missing iss";
-    }
+    const issuerUrl = checkIssuer(req);
+    checkAction(req);
 
     logger.info(
       `Checking OIDC support at ${issuerUrl} via openid-client's discover feature:`
@@ -65,3 +63,32 @@ const handler: RequestHandler = async (
   }
 };
 export default handler;
+function checkAction(req: Request) {
+  const action = req.query.action?.toString();
+  if (!action) {
+    throw "Missing action parameter in the launch URL";
+  }
+  const supportedActionParameters = [
+    "viewMap",
+    "viewHealthServices",
+    "viewReferralFacourite",
+    "searchHealthMap",
+    "referDirect",
+    "portal",
+    "sendMessage",
+    "addForm",
+  ];
+  if (supportedActionParameters.indexOf(action) === -1) {
+    logger.warn(
+      "Unrecognized SMART action parameter in the launch URL: " + action
+    );
+  }
+}
+
+function checkIssuer(req: Request) {
+  const issuerUrl = req.query.iss?.toString();
+  if (!issuerUrl) {
+    throw "missing iss URL parameter";
+  }
+  return issuerUrl;
+}
