@@ -1,7 +1,7 @@
 {
-  "name": "fhirclient",
+  "name": "ocean-ts-integration",
   "version": "1.0.0",
-  "description": "HTTP fhir client for testing",
+  "description": "Ocean TS Integration Tools",
   "scripts": {
     "build": "tsc",
     "clean": "tsc --build --clean",

@@ -55,6 +55,18 @@
 		{
 			"type": "node",
 			"request": "launch",
+			"name": "src/smart-server/main.ts",
+			"runtimeArgs": [
+				"-r",
+				"ts-node/register"
+			],
+			"args": [
+				"${workspaceFolder}/src/smart-server/main.ts"
+			]
+		},
+		{
+			"type": "node",
+			"request": "launch",
 			"name": "src/webhook-server/main.ts",
 			"runtimeArgs": [
 				"-r",
