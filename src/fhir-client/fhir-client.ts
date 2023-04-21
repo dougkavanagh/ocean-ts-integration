@@ -21,7 +21,7 @@ export async function readReferralPdf({
   await readPdf(res, fileStream);
 }
 
-export async function readPdf(
+async function readPdf(
   res: Response,
   fileStream: fs.WriteStream
 ): Promise<void> {
