@@ -8,8 +8,8 @@ import {
   createPractitioner,
   createPractitionerRole,
   createServiceRequest,
-  createTask,
 } from "./model/service-request";
+import { createTask } from "./model/task";
 import {
   OCEAN_HOST as oceanHost,
   REFERRAL_REF,
@@ -72,6 +72,27 @@ async function setReferralAsCompleted(bearerToken: string) {
   });
   const message = createMessageBundle({
     resources: [header, task],
+  });
+  return await postReferralFhirMessage({ bearerToken, message, oceanHost });
+}
+
+async function sendCommunicationFromProvider(bearerToken: string) {
+  const referralRef = REFERRAL_REF;
+  const communication = createCommunication({
+    serviceRequestId: referralRef,
+    status: "completed",
+  });
+  const header = createMessageHeader({
+    msgType: "send-communication-from-provider",
+    focus: [
+      {
+        reference: "Communication/" + communication.id,
+      },
+    ],
+    serviceRequestId: referralRef,
+  });
+  const message = createMessageBundle({
+    resources: [header, communication],
   });
   return await postReferralFhirMessage({ bearerToken, message, oceanHost });
 }

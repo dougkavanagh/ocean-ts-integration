@@ -1,7 +1,11 @@
 import { fhirR4 } from "@smile-cdr/fhirts";
 import { nanoid } from "nanoid";
 
-export type MessageType = "notify-update-appointment" | "notify-update-status";
+export type MessageType =
+  | "notify-update-appointment"
+  | "notify-update-status"
+  | "send-communication-from-provider"
+  | "send-communication-from-requester";
 
 export function id(): string {
   return nanoid();
@@ -488,64 +492,6 @@ export function createDocumentReference(): fhirR4.DocumentReference {
         },
       },
     ],
-  };
-}
-
-export function createTask({
-  serviceRequestId,
-  status,
-  extension
-}: {
-  serviceRequestId: string;
-  status: "accepted" | "completed";
-  extension?: fhirR4.Task["extension"];
-}): fhirR4.Task {
-  // this is the general format used by Novari's test:
-  return {
-    resourceType: "Task",
-    id: id(),
-    identifier: [
-      {
-        use: "official",
-        system: "http:/goodhealth.org/identifiers",
-        value: "20170201-001",
-      },
-    ],
-    basedOn: [
-      {
-        reference: "ServiceRequest/" + serviceRequestId,
-      },
-    ],
-    status,
-    businessStatus: {
-      coding: [
-        {
-          system:
-            "https://ehealthontario.ca/fhir/CodeSystem/task-business-status",
-          code: "NW",
-          display: "New",
-        },
-      ],
-    },
-    intent: "plan",
-    code: {
-      coding: [
-        {
-          system: "http://hl7.org/fhir/CodeSystem/task-code",
-          code: "approve",
-          display: "Activate/approve the focal resource",
-        },
-      ],
-    },
-    executionPeriod: {
-      start: new Date("2016-10-31T08:25:05+10:00"),
-    },
-    authoredOn: new Date("2016-10-31T08:25:05+10:00"),
-    lastModified: new Date("2016-11-30T08:25:05+10:00"),
-    owner: {
-      reference: "PractitionerRole/sample_listing-82464989",
-    },
-    extension
   };
 }
 
