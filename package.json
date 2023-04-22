@@ -9,6 +9,7 @@
     "fhir-validator": "ts-node src/fhir-validator/main.ts",
     "open-api": "ts-node src/open-api/main.ts",
     "smart-client": "ts-node src/smart-client/main.ts",
+    "smart-server": "ts-node src/smart-server/src/main.ts",
     "webhook-server": "ts-node src/webhook-server/main.ts"
   },
   "author": "",

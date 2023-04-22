@@ -1,6 +1,6 @@
 // http://localhost:8888/api/fhir/.well-known/openid-configuration
 import { Request, Response, Router } from "express";
-import { AUTHORIZE_URL, TOKEN_URL } from "~/services/auth/oidc-paths";
+import { AUTHORIZE_URL, TOKEN_URL } from "../env";
 
 const getHandler = (req: Request, res: Response) => {
   const json = {
@@ -41,13 +41,14 @@ const getHandler = (req: Request, res: Response) => {
       "patient/*.*",
       "user/*.*",
       "offline_access",
+      "online_access",
     ],
 
     // RECOMMENDED, array of OAuth2 response_type values that are supported
     response_types_supported: [
+      "id_token",
       "code",
       //     "code id_token",
-      //     "id_token",
       //     "refresh_token"
     ],
 

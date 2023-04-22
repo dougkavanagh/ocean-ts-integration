@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { Request, Response } from "express";
 import { JwtPayload, sign } from "jsonwebtoken";
 import { SessionUser, signObject } from "../auth-utils";
-import { FHIR_URL, HOST } from '../env';
+import { FHIR_URL, HOST, OIDC_PRIVATE_KEY } from "../env";
 
 export async function handleTokenRequest(req: Request, res: Response) {
   const { client_id, client_secret, grant_type, code, code_verifier, scope } =
@@ -23,9 +23,7 @@ export async function handleTokenRequest(req: Request, res: Response) {
     if (grant_type === "client_credentials") {
       handleClientCredentials({ req, res, client_id, client_secret, scope });
     } else {
-      return res
-        .status(401)
-        .send("grant_type must be client_credentials");
+      return res.status(401).send("grant_type must be client_credentials");
     }
   } catch (error) {
     return res.status(500).send(error);
@@ -177,6 +175,5 @@ async function validateCredentials(client_id: string, client_secret: string) {
     siteId: "testSite",
     clientId: client_id,
     idTokenIssuer: "https://test.com",
-  }
+  };
 }
-

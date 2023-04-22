@@ -9,6 +9,19 @@
 			],
 			"group": "build",
 			"label": "tsc: build - tsconfig.json"
-		}
+		},
+		{
+			"label": "Run smart-client",
+			"type": "shell",
+			"command": "npx ts-node main.ts",
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/src/smart-client"
+			},
+			"problemMatcher": []
+		},
 	]
 }

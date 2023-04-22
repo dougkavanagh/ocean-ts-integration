@@ -1,4 +1,4 @@
-import { JwtPayload, SignOptions, verify, sign } from 'jsonwebtoken';
+import { JwtPayload, SignOptions, verify, sign } from "jsonwebtoken";
 import { SESSION_SECRET } from "./env";
 import { ErrorMessage } from "./core";
 import { Request } from "express";
@@ -32,18 +32,17 @@ export function signObject(obj: object, options?: SignOptions): string {
   );
 }
 
-
 export interface SessionUser {
   userId?: string;
   siteId: string;
   profile: {
     displayName: string;
-  }
+  };
 }
 
 export interface SessionContext {
   user?: SessionUser;
-};
+}
 
 declare module "express" {
   // this extends the standard Request type with our own SessionContext:

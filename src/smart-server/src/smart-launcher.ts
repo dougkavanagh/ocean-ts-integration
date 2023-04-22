@@ -1,6 +1,6 @@
-import { JwtPayload } from 'jsonwebtoken';
-import { SessionContext, signObject } from './auth-utils';
-import { HOST, SMART_CLIENT_URL } from './env';
+import { JwtPayload } from "jsonwebtoken";
+import { SessionContext, signObject } from "./auth-utils";
+import { HOST, SMART_CLIENT_URL } from "./env";
 
 const BASE_URL = HOST;
 export const ISSUER_URL = `${BASE_URL}/fhir`;
@@ -16,11 +16,13 @@ export interface LaunchToken extends JwtPayload {
 export function createSmartLaunchUrl({
   context,
   ptId,
-  intent,
+  action,
+  clientSiteNum,
 }: {
   context: SessionContext;
   ptId?: string;
-  intent?: string;
+  action?: string;
+  clientSiteNum?: string;
 }) {
   const userId = context.user?.userId;
   if (!userId) {
@@ -36,7 +38,7 @@ export function createSmartLaunchUrl({
     siteId,
     iss: iss,
     ptId: ptId,
-    intent: intent,
+    intent: action,
   };
   const launch = signObject(launchToken, {
     expiresIn: 60,
@@ -46,8 +48,8 @@ export function createSmartLaunchUrl({
   const url =
     clientBaseLaunchUrl +
     (clientBaseLaunchUrl.includes("?") ? "&" : "?") +
-    `iss=${encodeURIComponent(iss)}&launch=${launch}`;
-  return {
-    url: url,
-  };
+    `iss=${encodeURIComponent(
+      iss
+    )}&launch=${launch}&action=${action}&siteNum=${clientSiteNum}`;
+  return url;
 }

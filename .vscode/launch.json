@@ -50,19 +50,21 @@
 			],
 			"args": [
 				"${workspaceFolder}/src/smart-client/main.ts"
-			]
+			],
+			"cwd": "${workspaceFolder}/src/smart-client"
 		},
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "src/smart-server/main.ts",
+			"name": "src/smart-server/src/main.ts",
 			"runtimeArgs": [
 				"-r",
 				"ts-node/register"
 			],
 			"args": [
-				"${workspaceFolder}/src/smart-server/main.ts"
-			]
+				"${workspaceFolder}/src/smart-server/src/main.ts"
+			],
+			"cwd": "${workspaceFolder}/src/smart-server"
 		},
 		{
 			"type": "node",

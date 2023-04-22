@@ -8,6 +8,8 @@ import { handleTokenRequest } from "./handlers/token-handler";
 import { PatientFhirHandler } from "./handlers/patient-fhir-handler";
 import { WellKnownOidcConfigurationHandler } from "./handlers/well-known-oidc-configuration-handler";
 import { WellKnownSmartConfigurationHandler } from "./handlers/well-known-smart-configuration-handler";
+import { createSmartLaunchUrl } from "./smart-launcher";
+const FHIR_ENDPOINT_PREFIX = "/fhir";
 
 const app: express.Application = express();
 app.use(express.urlencoded({ extended: true }));
@@ -30,7 +32,7 @@ function createRouters() {
 }
 function createAuthorizedFhirRouter() {
   const fhirRouter = express.Router();
-  app.use("/fhir", fhirRouter);
+  app.use(FHIR_ENDPOINT_PREFIX, fhirRouter);
   fhirRouter.use(async (req: Request, res: Response, next) => {
     if (
       req.path === "/CapabilityStatement" ||
@@ -74,5 +76,33 @@ function createFhirRoutes(fhirRouter: Router) {
 }
 
 app.listen(PORT, () => {
-  console.log(`Webhook server is listening at http://localhost:${PORT}`);
+  const serverUrl = `http://localhost:${PORT}`;
+  console.log(`SMART server is listening at ${serverUrl}`);
+  console.log(`The following endpoints should be publicly accessible:`);
+  console.log(
+    `${serverUrl}${FHIR_ENDPOINT_PREFIX}/.well-known/smart-configuration`
+  );
+  console.log(
+    `${serverUrl}${FHIR_ENDPOINT_PREFIX}/.well-known/openid-configuration`
+  );
+  console.log("Simulating a 'View Patient in Ocean' launch button...");
+  const OCEAN_TEST_SITE_NUM = "1234";
+  const OCEAN_ACTION = "refer";
+  const smartLaunchUrl = createSmartLaunchUrl({
+    context: {
+      user: {
+        userId: "user12345",
+        siteId: "site12345",
+        profile: {
+          displayName: "Test User",
+        },
+      },
+    },
+    ptId: "pt12345",
+    clientSiteNum: OCEAN_TEST_SITE_NUM,
+    action: OCEAN_ACTION,
+  });
+  console.log(
+    `The EMR then opens the following SMART launch URL in a new tab in the user's default web browser:\n${smartLaunchUrl}`
+  );
 });
