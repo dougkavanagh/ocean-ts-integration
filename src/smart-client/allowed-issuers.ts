@@ -17,6 +17,9 @@ const allowedConfigs: AllowedIssuer[] = [
   {
     iss: "http://localhost:8888/api/fhir",
   },
+  {
+    iss: "http://localhost:9500/fhir",
+  },
 ];
 
 export function lookupIssuerInAllowlist(iss: string): AllowedIssuer | null {

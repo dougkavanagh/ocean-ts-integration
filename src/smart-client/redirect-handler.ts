@@ -10,7 +10,6 @@ import { lookupIssuerInAllowlist } from "./allowed-issuers";
 import logger from "./logger";
 import { verifyJwt } from "./session-service";
 import { CLIENT_ID, CLIENT_SECRET } from "./env";
-import { fhirR4 } from "@smile-cdr/fhirts";
 
 custom.setHttpOptionsDefaults({
   timeout: 60000,
@@ -23,6 +22,7 @@ const handler: RequestHandler = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
+  logger.info(`SMART client redirect`);
   try {
     if (req.query.error) {
       return next(
@@ -33,6 +33,7 @@ const handler: RequestHandler = async (
     if (!req.query.state) {
       return next(`Missing state parameter from SMART redirect`);
     }
+    logger.info(`SMART client: verifying JWT`);
     const state = verifyJwt(req.query.state.toString()) as
       | ClientLaunchState
       | ErrorMessage;
@@ -49,7 +50,7 @@ const handler: RequestHandler = async (
     const issuerConfig = lookupIssuerInAllowlist(issuerUrl);
     if (!issuerConfig) {
       return next(
-        `Issuer from SMART server is not in the config.ts allowlist: ${issuerUrl}`
+        `SMART client error: The issuer from SMART server is not in the allowed-issuers.ts allowlist: ${issuerUrl}`
       );
     }
     const tokenSet = await fetchAndValidateTokenWithOIDC(
@@ -93,6 +94,8 @@ async function fetchAndValidateTokenWithOIDC(
   res: Response,
   next: NextFunction
 ): Promise<TokenSet | void> {
+  logger.info(`SMART client redirect handler: discovering issuer`);
+  logger.info(`creds: ${CLIENT_ID} ${CLIENT_SECRET}`);
   const issuer: Issuer<Client> = await Issuer.discover(issuerUrl);
   const client = new issuer.Client({
     client_id: CLIENT_ID,
@@ -107,6 +110,7 @@ async function fetchAndValidateTokenWithOIDC(
   const params = client.callbackParams(req);
   try {
     // fetch the token with this SMART app's credentials and the authorization code
+    logger.info(`SMART client redirect handler: fetching token`);
     const tokenSet = await client.callback(getRedirectUrl(req), params, {
       state: req.query.state?.toString(),
     });
@@ -115,9 +119,10 @@ async function fetchAndValidateTokenWithOIDC(
     logger.info(`received and validated tokens for ${issuerUrl}`);
     return tokenSet;
   } catch (e: unknown) {
-    throw new Error(
-      `Error returned from SMART server while fetching token: ${e}`
-    );
+    logger.error("fetching token failed:");
+    console.error(e);
+    logger.error(e);
+    next(`Error returned from SMART server while fetching token: ${e}`);
   }
 }
 

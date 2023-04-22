@@ -5,6 +5,7 @@ import { ErrorMessage, isErrorMessage } from "../core";
 import { verifyJwt } from "../auth-utils";
 import { LaunchToken } from "../launch-token";
 import { AuthorizationCodeService } from "../authorization-code-service";
+import logger from "../logger";
 
 function stringIsAValidUrl(s: string) {
   try {
@@ -28,6 +29,7 @@ export async function handleAuthorizeRequest(req: Request, res: Response) {
     launch, // SMART launch context
   } = req.method === "POST" ? req.body : req.query;
   const contentType = req.header("content-type");
+  logger.info("Handling authorize request");
   if (
     req.method === "POST" &&
     !contentType?.includes("application/x-www-form-urlencoded")
@@ -48,23 +50,17 @@ export async function handleAuthorizeRequest(req: Request, res: Response) {
   if (!client_id) {
     return res.status(401).send("Missing client_id header");
   }
-  if (!client_secret) {
-    return res.status(401).send("Missing client_secret header");
-  }
   if (!stringIsAValidUrl(redirect_uri)) {
     return res.status(401).send("redirect_uri must be a valid URL");
   }
-  if (!code_challenge) {
-    return res.status(401).send("code_challenge must be specified");
-  }
-  if (code_challenge_method !== "S256") {
+  if (code_challenge && code_challenge_method !== "S256") {
     return res.status(401).send("code_challenge_method must be 'S256'");
   }
-  if (!validateClientCredentials(client_id, client_secret)) {
-    return res.status(401).send("Invalid client credentials");
-  }
   try {
-    const code = await createAuthorizationCodeBasedOnSuppliedCreds(launch);
+    const code = await createAuthorizationCodeBasedOnSuppliedCreds(
+      launch,
+      scopes
+    );
     if (isErrorMessage(code)) {
       return res
         .status(400)
@@ -78,10 +74,11 @@ export async function handleAuthorizeRequest(req: Request, res: Response) {
 }
 
 async function createAuthorizationCodeBasedOnSuppliedCreds(
-  launch: string
+  launch: string,
+  scopes: string[]
 ): Promise<AuthorizationCode | ErrorMessage> {
   if (launch) {
-    return createAuthorizationCodeFromLaunchToken(launch);
+    return createAuthorizationCodeFromLaunchToken(launch, scopes);
   } else {
     return new ErrorMessage(
       "Only 'launch' authorization is supported by the OAuth2/OIDC in SMART app launch"
@@ -90,14 +87,15 @@ async function createAuthorizationCodeBasedOnSuppliedCreds(
 }
 
 async function createAuthorizationCodeFromLaunchToken(
-  launch: string
+  launch: string,
+  scopes: string[]
 ): Promise<AuthorizationCode | ErrorMessage> {
   const launchToken = verifyJwt(launch) as LaunchToken | ErrorMessage;
   if (isErrorMessage(launchToken)) {
     return new ErrorMessage("Invalid launch token");
   }
   const code: AuthorizationCode =
-    await AuthorizationCodeService.createFromLaunchToken(launchToken);
+    await AuthorizationCodeService.createFromLaunchToken(launchToken, scopes);
   // Note: the authorization code is generally saved to the database or stored in e.g. Redis
   return code
     ? code
@@ -135,12 +133,4 @@ export interface AuthorizationCode {
   codeChallenge?: string | null;
   codeChallengeMethod?: string | null;
   expiresAt: Date;
-}
-
-function validateClientCredentials(
-  client_id: string,
-  client_secret: string
-): boolean {
-  // check against your EMR's allowlist
-  return client_id === "my-client-id" && client_secret === "my-client-secret";
 }

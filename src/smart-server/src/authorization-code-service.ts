@@ -24,17 +24,19 @@ async function findAndRemoveById(
   return store.get(id) ?? null;
 }
 
-async function createFromLaunchToken({
-  userId,
-  ptId,
-  encounter,
-  siteId,
-  clientId,
-  iss,
-  codeChallenge,
-  codeChallengeMethod,
-  scopes,
-}: LaunchToken): Promise<AuthorizationCode> {
+async function createFromLaunchToken(
+  {
+    userId,
+    ptId,
+    encounter,
+    siteId,
+    clientId,
+    iss,
+    codeChallenge,
+    codeChallengeMethod,
+  }: LaunchToken,
+  scopes: string[]
+): Promise<AuthorizationCode> {
   const code: AuthorizationCode = {
     id: id(),
     userId,

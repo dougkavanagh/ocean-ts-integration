@@ -2,7 +2,7 @@
 
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import express from "express";
+import express, { ErrorRequestHandler } from "express";
 import launchHandler from "./launch-handler";
 import redirectHandler from "./redirect-handler";
 import logger from "./logger";
@@ -16,6 +16,11 @@ import {
 } from "./env";
 
 const app: express.Application = express();
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
+};
+app.use(errorHandler);
 app.use(cookieParser());
 app.use(
   cors({

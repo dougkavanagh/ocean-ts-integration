@@ -11,6 +11,7 @@ import base64url from "base64-url";
 export async function handleTokenRequest(req: Request, res: Response) {
   const { client_id, client_secret, grant_type, code, code_verifier, scope } =
     req.body;
+  logger.info("Handling authorize request");
   const contentType = req.header("content-type");
   if (
     !contentType?.includes("application/x-www-form-urlencoded") &&
@@ -29,6 +30,7 @@ export async function handleTokenRequest(req: Request, res: Response) {
         req,
         res,
         client_id,
+        client_secret,
         code,
         code_verifier,
       });
@@ -44,10 +46,11 @@ async function handleAuthorizationCode(args: {
   req: Request;
   res: Response;
   client_id: string;
+  client_secret?: string;
   code: string;
   code_verifier?: string;
 }) {
-  const { req, res, client_id, code, code_verifier } = args;
+  const { req, res, client_id, client_secret, code, code_verifier } = args;
   if (!code) {
     return res.status(401).send("Missing authorization code");
   }
@@ -87,6 +90,18 @@ async function handleAuthorizationCode(args: {
       return res.status(401).send("Authorization code challenge failed");
     }
   }
+  // recommended client validation:
+  // else if (client_secret) {
+  //   if (!validateClientCredentials(client_id, client_secret)) {
+  //     return res.status(401).send("Invalid client credentials");
+  //   }
+  // } else {
+  //   return res
+  //     .status(401)
+  //     .send(
+  //       "In addition to the authorization code, a code_verifier (PKCE) and/or client_secret are required to ensure this client is trustworthy"
+  //     );
+  // }
   const user = {
     siteId: storedAuthCode.siteId,
     accessibleSiteIds: storedAuthCode.siteId ? [storedAuthCode.siteId] : [],
@@ -108,6 +123,14 @@ async function handleAuthorizationCode(args: {
     scopes: storedAuthCode.scopes,
     extraContext: await getExtraContext(storedAuthCode),
   });
+}
+
+function validateClientCredentials(
+  client_id: string,
+  client_secret: string
+): boolean {
+  // check against your EMR's allowlist
+  return client_id === "my-client-id" && client_secret === "my-client-secret";
 }
 
 function sendAccessToken({

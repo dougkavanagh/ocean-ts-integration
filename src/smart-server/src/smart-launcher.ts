@@ -1,20 +1,7 @@
 import { JwtPayload } from "jsonwebtoken";
 import { SessionContext, signObject } from "./auth-utils";
 import { FHIR_ENDPOINT_PREFIX, SERVER_URL, SMART_CLIENT_URL } from "./env";
-
-const BASE_URL = SERVER_URL;
-
-export interface LaunchToken extends JwtPayload {
-  userId: string;
-  ptId?: string;
-  encounter?: string;
-  siteId: string;
-  // clientId: string;
-  iss: string;
-  codeChallenge?: string;
-  codeChallengeMethod?: string;
-  // scopes: string[];
-}
+import { LaunchToken } from "./launch-token";
 
 export function createSmartLaunchUrl({
   context,

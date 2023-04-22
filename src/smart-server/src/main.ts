@@ -1,6 +1,11 @@
 import bodyParser from "body-parser";
 import cors from "cors";
-import express, { Request, Response, Router } from "express";
+import express, {
+  ErrorRequestHandler,
+  Request,
+  Response,
+  Router,
+} from "express";
 import { FHIR_ENDPOINT_PREFIX, PORT } from "./env";
 import { verifyBearerToken } from "./auth-utils";
 import { isErrorMessage } from "./core";
@@ -9,8 +14,14 @@ import { PatientFhirHandler } from "./handlers/patient-fhir-handler";
 import { WellKnownOidcConfigurationHandler } from "./handlers/well-known-oidc-configuration-handler";
 import { WellKnownSmartConfigurationHandler } from "./handlers/well-known-smart-configuration-handler";
 import { createSmartLaunchUrl } from "./smart-launcher";
+import { handleAuthorizeRequest } from "./handlers/authorize-handler";
 
 const app: express.Application = express();
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
+};
+app.use(errorHandler);
 app.use(express.urlencoded({ extended: true }));
 app.use(
   bodyParser.json({ type: ["application/fhir+json", "application/json"] })
@@ -64,6 +75,7 @@ function createAuthorizedFhirRouter() {
 
 function createAuthRouter() {
   const authRouter = express.Router();
+  authRouter.all("/authorize", handleAuthorizeRequest);
   authRouter.post("/token", handleTokenRequest);
   app.use("/auth", authRouter);
 }
@@ -86,7 +98,7 @@ app.listen(PORT, () => {
   );
   console.log("Simulating a 'View Patient in Ocean' launch button...");
   const OCEAN_TEST_SITE_NUM = "1234";
-  const OCEAN_ACTION = "refer";
+  const OCEAN_ACTION = "viewMap";
   const smartLaunchUrl = createSmartLaunchUrl({
     context: {
       user: {
@@ -102,6 +114,6 @@ app.listen(PORT, () => {
     action: OCEAN_ACTION,
   });
   console.log(
-    `The EMR then opens the following SMART launch URL in a new tab in the user's default web browser:\n${smartLaunchUrl}`
+    `The EMR opens the following SMART launch URL in a new tab in the user's default web browser:\n${smartLaunchUrl}`
   );
 });

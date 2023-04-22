@@ -5,9 +5,9 @@ export interface LaunchToken extends JwtPayload {
   ptId?: string;
   encounter?: string;
   siteId: string;
-  clientId: string;
+  //clientId?: string;
   iss: string;
   codeChallenge?: string;
   codeChallengeMethod?: string;
-  scopes: string[];
+  //scopes: string[];
 }
