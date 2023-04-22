@@ -11,13 +11,19 @@ if (!SESSION_SECRET) {
   console.error("No session secret. Set SESSION_SECRET environment variable.");
 }
 
-export const OIDC_PRIVATE_KEY = envs?.OIDC_PRIVATE_KEY ?? "";
+export const OIDC_PRIVATE_KEY = Buffer.from(
+  envs?.OIDC_PRIVATE_KEY_BASE64 ?? "",
+  "base64"
+).toString();
 if (!OIDC_PRIVATE_KEY) {
-  console.error("Set OIDC_PRIVATE_KEY environment variable.");
+  console.error("Set OIDC_PRIVATE_KEY_BASE64 environment variable.");
 }
-export const OIDC_PUBLIC_KEY = envs?.OIDC_PUBLIC_KEY ?? "";
+export const OIDC_PUBLIC_KEY = Buffer.from(
+  envs?.OIDC_PUBLIC_KEY_BASE64 ?? "",
+  "base64"
+).toString();
 if (!OIDC_PUBLIC_KEY) {
-  console.error("Set OIDC_PUBLIC_KEY environment variable.");
+  console.error("Set OIDC_PUBLIC_KEY_BASE64 environment variable.");
 }
 
 export const FHIR_URL = SERVER_URL + FHIR_ENDPOINT_PREFIX;
