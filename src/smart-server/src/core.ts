@@ -1,3 +1,5 @@
+import { nanoid } from "nanoid";
+
 export class ErrorMessage {
   message: string;
   httpCode?: number;
@@ -20,4 +22,8 @@ export class ErrorMessage {
 }
 export function isErrorMessage(obj: any): obj is ErrorMessage {
   return obj && obj.message;
+}
+
+export function id(length?: number) {
+  return nanoid(length ?? 12);
 }

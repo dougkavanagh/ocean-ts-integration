@@ -1,16 +1,19 @@
 import { JwtPayload } from "jsonwebtoken";
 import { SessionContext, signObject } from "./auth-utils";
-import { HOST, SMART_CLIENT_URL } from "./env";
+import { FHIR_ENDPOINT_PREFIX, SERVER_URL, SMART_CLIENT_URL } from "./env";
 
-const BASE_URL = HOST;
-export const ISSUER_URL = `${BASE_URL}/fhir`;
+const BASE_URL = SERVER_URL;
 
 export interface LaunchToken extends JwtPayload {
   userId: string;
-  siteId: string;
-  iss: string;
   ptId?: string;
-  intent?: string;
+  encounter?: string;
+  siteId: string;
+  // clientId: string;
+  iss: string;
+  codeChallenge?: string;
+  codeChallengeMethod?: string;
+  // scopes: string[];
 }
 
 export function createSmartLaunchUrl({
@@ -32,7 +35,7 @@ export function createSmartLaunchUrl({
   if (!siteId) {
     return { error: "Missing site" };
   }
-  const iss = ISSUER_URL;
+  const iss = SERVER_URL + FHIR_ENDPOINT_PREFIX;
   const launchToken: LaunchToken = {
     userId,
     siteId,

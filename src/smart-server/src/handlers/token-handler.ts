@@ -2,7 +2,11 @@ import crypto from "crypto";
 import { Request, Response } from "express";
 import { JwtPayload, sign } from "jsonwebtoken";
 import { SessionUser, signObject } from "../auth-utils";
-import { FHIR_URL, HOST, OIDC_PRIVATE_KEY } from "../env";
+import { FHIR_URL, SERVER_URL, OIDC_PRIVATE_KEY } from "../env";
+import logger from "../logger";
+import { AuthorizationCode } from "./authorize-handler";
+import { AuthorizationCodeService } from "../authorization-code-service";
+import base64url from "base64-url";
 
 export async function handleTokenRequest(req: Request, res: Response) {
   const { client_id, client_secret, grant_type, code, code_verifier, scope } =
@@ -20,50 +24,89 @@ export async function handleTokenRequest(req: Request, res: Response) {
       );
   }
   try {
-    if (grant_type === "client_credentials") {
-      handleClientCredentials({ req, res, client_id, client_secret, scope });
+    if (grant_type === "authorization_code") {
+      handleAuthorizationCode({
+        req,
+        res,
+        client_id,
+        code,
+        code_verifier,
+      });
     } else {
-      return res.status(401).send("grant_type must be client_credentials");
+      return res.status(401).send("grant_type must be authorization_code");
     }
   } catch (error) {
     return res.status(500).send(error);
   }
 }
 
-async function handleClientCredentials(args: {
+async function handleAuthorizationCode(args: {
   req: Request;
   res: Response;
   client_id: string;
-  client_secret: string;
-  scope: string;
+  code: string;
+  code_verifier?: string;
 }) {
-  const { req, res, client_id, client_secret, scope } = args;
-  if (!client_id || !client_secret) {
-    return res.status(401).send("Missing client_id and client_secret headers");
+  const { req, res, client_id, code, code_verifier } = args;
+  if (!code) {
+    return res.status(401).send("Missing authorization code");
   }
-  const creds = await validateCredentials(client_id, client_secret);
-  if (!creds) {
-    return res.status(401).send("Invalid client_id or client_secret");
+  const providedAuthCode = JSON.parse(
+    base64url.decode(code)
+  ) as AuthorizationCode;
+  logger.info("Provided auth code: " + JSON.stringify(providedAuthCode));
+  const storedAuthCode = await AuthorizationCodeService.findAndRemoveById(
+    providedAuthCode.id
+  );
+  logger.info("Got auth code " + storedAuthCode?.id + " from db");
+  if (!storedAuthCode) {
+    return res.status(401).send("Invalid authorization code");
+  }
+  if (storedAuthCode.expiresAt < new Date()) {
+    return res.status(401).send("Authorization code has expired");
+  }
+  if (storedAuthCode.codeChallenge) {
+    if (!code_verifier) {
+      return res.status(401).send("Authorization code_verifier is missing");
+    }
+    if (code_verifier.length < 43) {
+      return res
+        .status(400)
+        .send(
+          "Authorization code_verifier is too short (must be at least 43 characters)"
+        );
+    }
+    const codeChallenge = crypto
+      .createHash("sha256")
+      .update(code_verifier ?? "")
+      .digest("base64");
+    if (
+      codeChallenge !==
+      Buffer.from(storedAuthCode.codeChallenge, "base64").toString("base64")
+    ) {
+      return res.status(401).send("Authorization code challenge failed");
+    }
   }
   const user = {
-    siteId: creds.siteId,
-    accessibleSiteIds: [creds.siteId],
-    clientId: creds.clientId,
+    siteId: storedAuthCode.siteId,
+    accessibleSiteIds: storedAuthCode.siteId ? [storedAuthCode.siteId] : [],
     roles: {
       admin: false,
     },
     profile: {
-      displayName: `OAuth2 client_credentials user ${creds.clientId}`,
+      displayName: `OAuth2 authorization_code user`,
     },
   };
-  const scopes = (scope ?? "").split(" ");
   sendAccessToken({
     req,
     res,
+    patient: storedAuthCode.ptId,
+    encounter: storedAuthCode.encounter,
+    idTokenIssuer: storedAuthCode.idTokenIssuer ?? "",
     clientId: client_id,
-    idTokenIssuer: creds.idTokenIssuer ?? "",
     user,
-    scopes,
+    scopes: storedAuthCode.scopes,
+    extraContext: await getExtraContext(storedAuthCode),
   });
 }
 
@@ -92,7 +135,7 @@ function sendAccessToken({
 }) {
   const expiresIn = 60 * 60;
   const accessTokenPayload: JwtPayload = {
-    iss: HOST + req.baseUrl,
+    iss: SERVER_URL + req.baseUrl,
     aud: FHIR_URL,
     sub: clientId,
     exp: Math.floor(Date.now() / 1000) + expiresIn,
@@ -170,10 +213,11 @@ function createIdToken({
   });
 }
 
-async function validateCredentials(client_id: string, client_secret: string) {
+async function getExtraContext(
+  code: AuthorizationCode
+): Promise<{ [key: string]: string } | undefined> {
+  // here you could fetch additional data based on the code.siteId, such as the oceanSharedEncryptionKey
   return {
-    siteId: "testSite",
-    clientId: client_id,
-    idTokenIssuer: "https://test.com",
+    oceanSharedEncryptionKey: "sampleSharedEncryptionKey",
   };
 }

@@ -1,7 +1,7 @@
 import bodyParser from "body-parser";
 import cors from "cors";
 import express, { Request, Response, Router } from "express";
-import { PORT } from "./env";
+import { FHIR_ENDPOINT_PREFIX, PORT } from "./env";
 import { verifyBearerToken } from "./auth-utils";
 import { isErrorMessage } from "./core";
 import { handleTokenRequest } from "./handlers/token-handler";
@@ -9,7 +9,6 @@ import { PatientFhirHandler } from "./handlers/patient-fhir-handler";
 import { WellKnownOidcConfigurationHandler } from "./handlers/well-known-oidc-configuration-handler";
 import { WellKnownSmartConfigurationHandler } from "./handlers/well-known-smart-configuration-handler";
 import { createSmartLaunchUrl } from "./smart-launcher";
-const FHIR_ENDPOINT_PREFIX = "/fhir";
 
 const app: express.Application = express();
 app.use(express.urlencoded({ extended: true }));

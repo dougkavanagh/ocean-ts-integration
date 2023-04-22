@@ -23,5 +23,18 @@
 			},
 			"problemMatcher": []
 		},
+		{
+			"label": "Run smart-server",
+			"type": "shell",
+			"command": "npx ts-node src/main.ts",
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/src/smart-server"
+			},
+			"problemMatcher": []
+		}
 	]
 }
