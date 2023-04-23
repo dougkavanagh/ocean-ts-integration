@@ -7,7 +7,7 @@
 		],
 		"allowJs": true,
 		"outDir": "out",
-		"rootDir": "src",
+		"rootDir": "projects",
 		"strict": true,
 		"esModuleInterop": true,
 		"types": [
@@ -17,10 +17,10 @@
 		"skipLibCheck": true
 	},
 	"include": [
-		"src/**/*"
+		"projects/**/*"
 	],
 	"exclude": [
-		"src/**/*.d.ts",
+		"projects/**/*.d.ts",
 		"node_modules"
 	],
 	"paths": {

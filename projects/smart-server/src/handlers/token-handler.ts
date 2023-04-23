@@ -234,7 +234,7 @@ function createIdToken({
 async function getExtraContext(
   code: AuthorizationCode
 ): Promise<{ [key: string]: string } | undefined> {
-  // here you could fetch additional data based on the code.siteId, such as the oceanSharedEncryptionKey
+  // TBI here you could fetch additional data based on the code.siteId, such as the oceanSharedEncryptionKey
   return {
     oceanSharedEncryptionKey: Buffer.from("sampleSharedEncryptionKey").toString(
       "base64"
