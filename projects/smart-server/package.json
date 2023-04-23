@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vite"
+    "serve": "ts-node src/main.ts",
+    "cert": "openssl genrsa -out private-key.pem 2048 && openssl rsa -in private-key.pem -outform PEM -pubout -out public-key.pem"
   },
   "devDependencies": {
     "@types/base64-url": "^2.2.0",
