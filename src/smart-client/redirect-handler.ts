@@ -94,7 +94,9 @@ async function fetchAndValidateTokenWithOIDC(
   res: Response,
   next: NextFunction
 ): Promise<TokenSet | void> {
-  logger.info(`SMART client redirect handler: discovering issuer`);
+  logger.info(
+    `SMART client redirect handler: discovering issuer at ${issuerUrl}`
+  );
   logger.info(`creds: ${CLIENT_ID} ${CLIENT_SECRET}`);
   const issuer: Issuer<Client> = await Issuer.discover(issuerUrl);
   const client = new issuer.Client({
@@ -110,7 +112,9 @@ async function fetchAndValidateTokenWithOIDC(
   const params = client.callbackParams(req);
   try {
     // fetch the token with this SMART app's credentials and the authorization code
-    logger.info(`SMART client redirect handler: fetching token`);
+    logger.info(
+      `SMART client redirect handler: fetching token from ${issuer.token_endpoint}`
+    );
     const tokenSet = await client.callback(getRedirectUrl(req), params, {
       state: req.query.state?.toString(),
     });

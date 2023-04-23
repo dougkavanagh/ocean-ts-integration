@@ -1,6 +1,12 @@
 // http://localhost:8888/api/fhir/.well-known/openid-configuration
 import { Request, Response, Router } from "express";
-import { SERVER_URL, AUTHORIZE_URL, KEYS_URL, TOKEN_URL } from "../env";
+import {
+  SERVER_URL,
+  AUTHORIZE_URL,
+  KEYS_URL,
+  TOKEN_URL,
+  TOKEN_ISSUER_URL,
+} from "../env";
 
 const getHandler = (req: Request, res: Response) => {
   const json = {
@@ -8,7 +14,7 @@ const getHandler = (req: Request, res: Response) => {
     // its Issuer Identifier. If Issuer discovery is supported (see Section 2), this value MUST be identical
     // to the issuer value returned by WebFinger. This also MUST be identical to the iss Claim value in
     // ID Tokens issued from this Issuer.
-    issuer: SERVER_URL,
+    issuer: TOKEN_ISSUER_URL,
 
     // REQUIRED. URL of the OPs JSON Web Key Set [JWK] document. This contains the signing key(s) the RP uses
     // to validate signatures from the OP. The JWK Set MAY also contain the Server's encryption key(s),

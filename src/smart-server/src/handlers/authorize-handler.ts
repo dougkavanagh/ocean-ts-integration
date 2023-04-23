@@ -20,7 +20,6 @@ export async function handleAuthorizeRequest(req: Request, res: Response) {
   const {
     response_type,
     client_id,
-    client_secret,
     redirect_uri,
     scope,
     state,

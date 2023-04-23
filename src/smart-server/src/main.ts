@@ -15,6 +15,8 @@ import { WellKnownOidcConfigurationHandler } from "./handlers/well-known-oidc-co
 import { WellKnownSmartConfigurationHandler } from "./handlers/well-known-smart-configuration-handler";
 import { createSmartLaunchUrl } from "./smart-launcher";
 import { handleAuthorizeRequest } from "./handlers/authorize-handler";
+import logger from "./logger";
+import { handleKeysRequest } from "./handlers/keys-handler";
 
 const app: express.Application = express();
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
@@ -33,6 +35,10 @@ app.use(
   })
 );
 createRouters();
+app.use(function (req, res, next) {
+  logger.warn(`404 not found: ${req.method} ${req.path}`);
+  res.status(404).send("Sorry, page not found");
+});
 export default app;
 
 function createRouters() {
@@ -77,6 +83,7 @@ function createAuthRouter() {
   const authRouter = express.Router();
   authRouter.all("/authorize", handleAuthorizeRequest);
   authRouter.post("/token", handleTokenRequest);
+  app.get("/keys", handleKeysRequest);
   app.use("/auth", authRouter);
 }
 

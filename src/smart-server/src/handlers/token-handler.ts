@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { Request, Response } from "express";
 import { JwtPayload, sign } from "jsonwebtoken";
 import { SessionUser, signObject } from "../auth-utils";
-import { FHIR_URL, SERVER_URL, OIDC_PRIVATE_KEY } from "../env";
+import { FHIR_SERVER_URL, SERVER_URL, OIDC_PRIVATE_KEY } from "../env";
 import logger from "../logger";
 import { AuthorizationCode } from "./authorize-handler";
 import { AuthorizationCodeService } from "../authorization-code-service";
@@ -11,7 +11,7 @@ import base64url from "base64-url";
 export async function handleTokenRequest(req: Request, res: Response) {
   const { client_id, client_secret, grant_type, code, code_verifier, scope } =
     req.body;
-  logger.info("Handling authorize request");
+  logger.info("Handling token request");
   const contentType = req.header("content-type");
   if (
     !contentType?.includes("application/x-www-form-urlencoded") &&
@@ -112,6 +112,7 @@ async function handleAuthorizationCode(args: {
       displayName: `OAuth2 authorization_code user`,
     },
   };
+  logger.info("Responding with access token");
   sendAccessToken({
     req,
     res,
@@ -159,7 +160,7 @@ function sendAccessToken({
   const expiresIn = 60 * 60;
   const accessTokenPayload: JwtPayload = {
     iss: SERVER_URL + req.baseUrl,
-    aud: FHIR_URL,
+    aud: FHIR_SERVER_URL,
     sub: clientId,
     exp: Math.floor(Date.now() / 1000) + expiresIn,
     iat: Math.floor(Date.now() / 1000),
@@ -181,6 +182,7 @@ function sendAccessToken({
         })
       : undefined;
   res.status(200);
+  logger.info("Responding with access token");
   res.json({
     ...extraContext,
     access_token: token,
@@ -219,7 +221,7 @@ function createIdToken({
 }) {
   // e.g. https://build.fhir.org/ig/HL7/smart-app-launch/worked_example_id_token.html
   // "fhirUser": "https://my-ehr.org/fhir/Practitioner/123"
-  const userString = FHIR_URL + "/Practitioner/" + user.id;
+  const userString = FHIR_SERVER_URL + "/Practitioner/" + user.id;
   const payload: Payload = {
     iss: iss,
     profile: userString,
@@ -241,6 +243,8 @@ async function getExtraContext(
 ): Promise<{ [key: string]: string } | undefined> {
   // here you could fetch additional data based on the code.siteId, such as the oceanSharedEncryptionKey
   return {
-    oceanSharedEncryptionKey: "sampleSharedEncryptionKey",
+    oceanSharedEncryptionKey: Buffer.from("sampleSharedEncryptionKey").toString(
+      "base64"
+    ),
   };
 }

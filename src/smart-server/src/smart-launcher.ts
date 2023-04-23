@@ -1,6 +1,5 @@
-import { JwtPayload } from "jsonwebtoken";
 import { SessionContext, signObject } from "./auth-utils";
-import { FHIR_ENDPOINT_PREFIX, SERVER_URL, SMART_CLIENT_URL } from "./env";
+import { SMART_CLIENT_URL, FHIR_SERVER_URL, TOKEN_ISSUER_URL } from "./env";
 import { LaunchToken } from "./launch-token";
 
 export function createSmartLaunchUrl({
@@ -22,11 +21,10 @@ export function createSmartLaunchUrl({
   if (!siteId) {
     return { error: "Missing site" };
   }
-  const iss = SERVER_URL + FHIR_ENDPOINT_PREFIX;
   const launchToken: LaunchToken = {
     userId,
     siteId,
-    iss: iss,
+    iss: TOKEN_ISSUER_URL,
     ptId: ptId,
     intent: action,
   };
@@ -39,7 +37,7 @@ export function createSmartLaunchUrl({
     clientBaseLaunchUrl +
     (clientBaseLaunchUrl.includes("?") ? "&" : "?") +
     `iss=${encodeURIComponent(
-      iss
+      FHIR_SERVER_URL
     )}&launch=${launch}&action=${action}&siteNum=${clientSiteNum}`;
   return url;
 }
