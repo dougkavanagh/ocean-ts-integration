@@ -3,7 +3,7 @@ import { signObject } from "./session-service";
 import { Issuer, Client } from "openid-client";
 import { ClientLaunchState, getRedirectUrl } from "./smart-util";
 import logger from "./logger";
-import { CLIENT_ID, REDIRECT_PATH } from "./env";
+import { CLIENT_ID } from "./env";
 
 // https://www.npmjs.com/package/openid-client
 

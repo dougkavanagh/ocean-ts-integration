@@ -7,6 +7,9 @@ export const FHIR_ENDPOINT_PREFIX = envs?.FHIR_PATH_PREFIX ?? "/fhir";
 export const AUTH_ENDPOINT_PREFIX = envs?.AUTH_PATH_PREFIX ?? "/auth";
 export const SERVER_URL = envs?.SERVER_URL ?? "http://localhost:" + PORT;
 
+export const ALLOWED_CLIENT_ID = envs?.ALLOWED_CLIENT_ID;
+export const ALLOWED_CLIENT_SECRET = envs?.ALLOWED_CLIENT_SECRET;
+
 export const SESSION_SECRET = envs?.SESSION_SECRET ?? "";
 if (!SESSION_SECRET) {
   logger.error("No session secret. Set SESSION_SECRET environment variable.");

@@ -29,6 +29,9 @@ OIDC_PRIVATE_KEY_BASE64=YOUR_OIDC_PRIVATE_KEY_ENCODED_IN_BASE64
 
 OIDC_KID=YOUR_OIDC_KID ( e.g., n42m3ljfidlnm43290f3021 )
 
+ALLOWED_CLIENT_ID=smart-client-sample-client-id
+ALLOWED_CLIENT_SECRET=smart-client-sample-client-secret
+
 ### OIDC Keys generation
 
 Run npm run cert to generate a private key and public key for the OIDC server. The private key will be saved to the file "private-key.pem" and the public key will be saved to the file "public-key.pem". Copy the contents of these files into the ".env" file.
