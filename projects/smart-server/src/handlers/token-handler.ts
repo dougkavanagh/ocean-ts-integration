@@ -7,6 +7,7 @@ import logger from "../logger";
 import { AuthorizationCode } from "./authorize-handler";
 import { AuthorizationCodeService } from "../authorization-code-service";
 import base64url from "base64-url";
+import { ClientService } from "../client-service";
 
 export async function handleTokenRequest(req: Request, res: Response) {
   const { client_id, client_secret, grant_type, code, code_verifier, scope } =
@@ -91,17 +92,17 @@ async function handleAuthorizationCode(args: {
     }
   }
   // recommended client validation:
-  // else if (client_secret) {
-  //   if (!validateClientCredentials(client_id, client_secret)) {
-  //     return res.status(401).send("Invalid client credentials");
-  //   }
-  // } else {
-  //   return res
-  //     .status(401)
-  //     .send(
-  //       "In addition to the authorization code, a code_verifier (PKCE) and/or client_secret are required to ensure this client is trustworthy"
-  //     );
-  // }
+  else if (client_secret) {
+    if (!ClientService.validateClientCredentials(client_id, client_secret)) {
+      return res.status(401).send("Invalid client credentials");
+    }
+  } else {
+    return res
+      .status(401)
+      .send(
+        "In addition to the authorization code, a code_verifier (PKCE) and/or client_secret are required to ensure this client is trustworthy"
+      );
+  }
   const user = {
     siteId: storedAuthCode.siteId,
     accessibleSiteIds: storedAuthCode.siteId ? [storedAuthCode.siteId] : [],
@@ -124,14 +125,6 @@ async function handleAuthorizationCode(args: {
     scopes: storedAuthCode.scopes,
     extraContext: await getExtraContext(storedAuthCode),
   });
-}
-
-function validateClientCredentials(
-  client_id: string,
-  client_secret: string
-): boolean {
-  // check against your EMR's allowlist
-  return client_id === "my-client-id" && client_secret === "my-client-secret";
 }
 
 function sendAccessToken({

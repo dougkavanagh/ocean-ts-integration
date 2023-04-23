@@ -7,75 +7,76 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "src/fhir-client/main.ts",
+			"name": "fhir-client/main.ts",
 			"runtimeArgs": [
 				"-r",
 				"ts-node/register"
 			],
 			"args": [
-				"${workspaceFolder}/src/fhir-client/main.ts"
+				"${workspaceFolder}/projects/fhir-client/main.ts"
 			]
 		},
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "src/fhir-validator/main.ts",
+			"name": "fhir-validator/main.ts",
 			"runtimeArgs": [
 				"-r",
 				"ts-node/register"
 			],
 			"args": [
-				"${workspaceFolder}/src/fhir-validator/main.ts"
+				"${workspaceFolder}/projects/fhir-validator/main.ts"
 			]
 		},
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "src/open-api/main.ts",
+			"name": "open-api/main.ts",
 			"runtimeArgs": [
 				"-r",
 				"ts-node/register"
 			],
 			"args": [
-				"${workspaceFolder}/src/open-api/main.ts"
-			]
+				"${workspaceFolder}/projects/open-api/main.ts"
+			],
+			"cwd": "${workspaceFolder}/projects/open-api"
 		},
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "src/smart-client/main.ts",
+			"name": "smart-client",
 			"runtimeArgs": [
 				"-r",
 				"ts-node/register"
 			],
 			"args": [
-				"${workspaceFolder}/src/smart-client/main.ts"
+				"${workspaceFolder}/projects/smart-client/src/main.ts"
 			],
-			"cwd": "${workspaceFolder}/src/smart-client"
+			"cwd": "${workspaceFolder}/projects/smart-client"
 		},
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "src/smart-server/src/main.ts",
+			"name": "smart-server",
 			"runtimeArgs": [
 				"-r",
 				"ts-node/register"
 			],
 			"args": [
-				"${workspaceFolder}/src/smart-server/src/main.ts"
+				"${workspaceFolder}/projects/smart-server/src/main.ts"
 			],
-			"cwd": "${workspaceFolder}/src/smart-server"
+			"cwd": "${workspaceFolder}/projects/smart-server"
 		},
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "src/webhook-server/main.ts",
+			"name": "webhook-server/main.ts",
 			"runtimeArgs": [
 				"-r",
 				"ts-node/register"
 			],
 			"args": [
-				"${workspaceFolder}/src/webhook-server/main.ts"
+				"${workspaceFolder}/projects/webhook-server/main.ts"
 			]
 		}
 	]

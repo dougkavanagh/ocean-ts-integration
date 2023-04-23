@@ -19,6 +19,8 @@ const handler: RequestHandler = async (
     logger.info(
       `Checking OIDC support at ${issuerUrl} via openid-client's discover feature:`
     );
+    // This library (https://www.npmjs.com/package/openid-client) will automatically discover the issuer's endpoints
+    // by making a GET request to the issuerUrl/.well-known/openid-configuration ->
     const issuer: Issuer<Client> = await Issuer.discover(issuerUrl);
     logger.info(`Discovery was successful`);
     const clientId = CLIENT_ID;

@@ -7,6 +7,7 @@ import {
   Router,
 } from "express";
 import { SessionContext } from "../auth-utils";
+import { PatientService } from "../patient-service";
 
 const getHandler: RequestHandler = async (
   req: Request,
@@ -19,7 +20,7 @@ const getHandler: RequestHandler = async (
   }
   const patientId = req.params.id;
   const resourceTypesToInclude = req.params._type?.split(",") ?? [];
-  const resources: fhirR4.Resource[] = loadPatientResources(
+  const resources: fhirR4.Resource[] = await loadPatientResources(
     context,
     patientId,
     resourceTypesToInclude
@@ -35,12 +36,16 @@ const getHandler: RequestHandler = async (
   res.status(200).json(bundle);
 };
 
-function loadPatientResources(
+async function loadPatientResources(
   context: SessionContext,
   patientId: string,
-  resourceTypesToInclude: string[]
-): fhirR4.Resource[] {
-  return [];
+  resourceTypesToInclude?: string[]
+): Promise<fhirR4.Resource[]> {
+  const resources: fhirR4.Resource[] = [];
+  if (!resourceTypesToInclude || resourceTypesToInclude.includes("Patient")) {
+    resources.push(await PatientService.loadPatient(context, patientId));
+  }
+  return resources;
 }
 
 function setup(router: Router) {

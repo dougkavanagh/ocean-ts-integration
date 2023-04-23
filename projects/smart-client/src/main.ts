@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { ErrorRequestHandler } from "express";
 import launchHandler from "./launch-handler";
-import redirectHandler from "./redirect-handler";
+import redirectHandler from "./post-redirect-handler";
 import logger from "./logger";
 import {
   FHIR_SERVER_URL,

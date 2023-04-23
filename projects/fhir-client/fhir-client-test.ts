@@ -18,6 +18,7 @@ import {
   APPOINTMENT_ID,
 } from "./env";
 import { Response } from "node-fetch";
+import { createCommunication } from "./model/communication";
 
 export async function testConfirmAppointment() {
   const bearerToken = await oauth2();
@@ -80,7 +81,6 @@ async function sendCommunicationFromProvider(bearerToken: string) {
   const referralRef = REFERRAL_REF;
   const communication = createCommunication({
     serviceRequestId: referralRef,
-    status: "completed",
   });
   const header = createMessageHeader({
     msgType: "send-communication-from-provider",

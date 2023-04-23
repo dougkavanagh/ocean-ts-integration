@@ -5,12 +5,12 @@
   "scripts": {
     "build": "tsc",
     "clean": "tsc --build --clean",
-    "fhir-client": "ts-node src/fhir-client/main.ts",
-    "fhir-validator": "ts-node src/fhir-validator/main.ts",
-    "open-api": "ts-node src/open-api/main.ts",
-    "smart-client": "ts-node src/smart-client/main.ts",
-    "smart-server": "ts-node src/smart-server/src/main.ts",
-    "webhook-server": "ts-node src/webhook-server/main.ts"
+    "fhir-client": "cd projects/fhir-client && ts-node main.ts",
+    "fhir-validator": "cd projects/fhir-validator && ts-node main.ts",
+    "open-api": "cd projects/open-api && ts-node main.ts",
+    "smart-client": "cd projects/smart-client && ts-node src/main.ts",
+    "smart-server": "cd projects/smart-server && ts-node src/main.ts",
+    "webhook-server": "cd projects/webhook-server && ts-node main.ts"
   },
   "author": "",
   "license": "MIT",

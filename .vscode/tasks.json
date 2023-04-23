@@ -13,13 +13,13 @@
 		{
 			"label": "Run smart-client",
 			"type": "shell",
-			"command": "npx ts-node main.ts",
+			"command": "npx ts-node src/main.ts",
 			"presentation": {
 				"reveal": "always",
 				"panel": "dedicated"
 			},
 			"options": {
-				"cwd": "${workspaceFolder}/src/smart-client"
+				"cwd": "${workspaceFolder}/projects/smart-client"
 			},
 			"problemMatcher": []
 		},
@@ -32,7 +32,7 @@
 				"panel": "dedicated"
 			},
 			"options": {
-				"cwd": "${workspaceFolder}/src/smart-server"
+				"cwd": "${workspaceFolder}/projects/smart-server"
 			},
 			"problemMatcher": []
 		}

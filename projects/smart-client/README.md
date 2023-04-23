@@ -17,7 +17,7 @@ You will also need to specify your server's OAuth2 credentials for this SMART te
 CLIENT_ID=your_client_id
 CLIENT_SECRET=your_client_secret (optional)
 
-To run it, run "npm run smart-client" in the command line or use the launch.json's "src/smart-client/main.ts" target in the VS Code debugger.
+To run it, run "npm run smart-client" in the command line or use the launch.json's "src/smart-client/src/main.ts" target in the VS Code debugger.
 
 #### Step 1: Launch Sequence
 

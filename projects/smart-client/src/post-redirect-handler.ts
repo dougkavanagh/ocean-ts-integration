@@ -10,12 +10,11 @@ import { lookupIssuerInAllowlist } from "./allowed-issuers";
 import logger from "./logger";
 import { verifyJwt } from "./session-service";
 import { CLIENT_ID, CLIENT_SECRET } from "./env";
+import { Bundle } from "@smile-cdr/fhirts/dist/FHIR-R4/classes/models-r4";
 
 custom.setHttpOptionsDefaults({
   timeout: 60000,
 });
-
-// https://www.npmjs.com/package/openid-client
 
 const handler: RequestHandler = async (
   req: Request,
@@ -118,7 +117,7 @@ async function fetchAndValidateTokenWithOIDC(
     const tokenSet = await client.callback(getRedirectUrl(req), params, {
       state: req.query.state?.toString(),
     });
-    // this client library automatically validates the token signature and
+    // the client library automatically validates the token signature and
     // the token expiration among other OIDC checks, prior to returning the tokenSet
     logger.info(`received and validated tokens for ${issuerUrl}`);
     return tokenSet;
@@ -184,17 +183,35 @@ async function fetchFhirResources({
   patientId: string;
 }) {
   logger.info(`Fetching FHIR resources from ${issuerUrl}`);
-  await readFhirResource({
+
+  const pt = await readFhirResource({
     url: `${issuerUrl}/Patient/${patientId}`,
     accessToken,
     expectedResourceType: "Patient",
   });
+  if (!pt) {
+    logger.error(`Patient resource not found for id ${patientId}`);
+  }
 
-  await readFhirResource({
+  const everythingBundle = (await readFhirResource({
     url: `${issuerUrl}/Patient/${patientId}/$everything`,
     accessToken,
     expectedResourceType: "Bundle",
-  });
+  })) as Bundle | null;
+  if (everythingBundle) {
+    logger.error(`Patient resource not found for id ${patientId}`);
+    if (
+      !everythingBundle.entry?.find(
+        (e) => e.resource?.resourceType === "Patient"
+      )
+    ) {
+      logger.error(
+        `The Patient resource was not found in the $everything bundle`
+      );
+    }
+  } else {
+    logger.error(`Everything bundle for patient ${patientId} is missing`);
+  }
 }
 
 async function readFhirResource({

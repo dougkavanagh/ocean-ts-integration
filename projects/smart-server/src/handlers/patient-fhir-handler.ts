@@ -8,6 +8,8 @@ import {
 } from "express";
 import { PatientEverythingFhirHandler } from "./patient-everything-fhir-handler";
 import { ErrorMessage, isErrorMessage } from "../core";
+import { PatientService } from "../patient-service";
+import { parseIdentifierParam } from "../fhir-utils";
 
 const getHandler: RequestHandler = async (
   req: Request,
@@ -28,23 +30,27 @@ async function handleQuery(
 ): Promise<fhirR4.Patient | fhirR4.Bundle | ErrorMessage> {
   const query = req.query;
   const id = req.params.id;
+  const context = req.context;
+  if (!context) {
+    return new ErrorMessage({ httpCode: 401, message: "No security context" });
+  }
   if (id) {
-    const pt: fhirR4.Patient = {
-      resourceType: "Patient",
-      // ...
-    };
+    const pt: fhirR4.Patient = await PatientService.loadPatient(context, id);
     if (!pt) {
       return new ErrorMessage({ httpCode: 404, message: "Patient not found" });
     }
     return pt;
   }
   if (query.identifier) {
-    // const idParam = parseIdentifierParam(query.identifier);
-    // const pts = await PatientService.findByIdSystemCodeAndValue({
-    //   context,
-    //   ...idParam,
-    // });
-    // return searchBundle(pts.map(patientToFhir));
+    // TBI: you may want to handle other search queries for the Patient endpoint, especially the identifier query for JHN (HNs)
+    const idParam = parseIdentifierParam(query.identifier);
+    /* e.g. 
+    const pts = await PatientService.findByIdSystemCodeAndValue({
+      context,
+      ...idParam,
+     });
+    return createSearchBundle(pts.map(patientToFhir));
+    */
   }
   return new ErrorMessage({ httpCode: 400, message: "Invalid query" });
 }
