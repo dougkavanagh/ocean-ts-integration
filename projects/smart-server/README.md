@@ -14,6 +14,7 @@ This project is inspired by the official [SMART on FHIR Launch Server](https://g
 - a parallel smart-client implementation for testing end-to-end OIDC-based single sign-on.
 - Ocean-specific configuration considerations
 - A limited reference implementation of relevant FHIR endpoints (Patient, $everything, etc.)
+- support for serverless (just wrap the main.ts express code in a function handler)
 
 ## Getting Started
 
@@ -21,16 +22,15 @@ Due to the public/private encryption requirements of OIDC, you will need to gene
 
 Create a ".env" file in this folder (the project root):
 
-PORT=9500
-SESSION_SECRET=YOUR_SESSION_SECRET_KEY (used for private symmetric JWT encryption by the server)
-OIDC_PUBLIC_KEY_BASE64=YOUR_OIDC_PUBLIC_KEY_ENCODED_IN_BASE64 ( e.g., LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUEwTjIrUGhhd2NscEo1ZG90WkRHNAo0TkFJR1ZkUUVIQ2V2UFdFekpLWUNDeThLU0V5dGpSemhVaXN1YkV3ODdFVkJLNzB2VzJBMUNMdmtrakFUcWpuCkh5bWJqS2w5K3ZIblZQazlkZDlJbmNWQUJXVHJQc0J1bDhvTmhXZFV6THZxY093RTd6M3MxUDhDWDBQb3d1b0IKUlAzQ25EUlMzZFZPZnBuRWRtSnNwSWc4c24vdjYxbnlONWVZRE5icFZ3M2Y0K085UWczWlp0bGE1dEdYem51bgorT1BrYlRWK3BVL1VaOCtHbTNIZ3JlQ3Y4S0RVZEE3V3BHdzUyOE1EOStFRE5kV0dwN0RFNjloclRWZVhZdjU2Ckt4aVJCcCtEZ3JRUkRCbUVtaHRRSThET0tha05UdHpPbXIrdDQyNjVra2x2ZnBpdkhpRFNOak9LcnBtaUxMMS8KVndJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg== )
-
+`PORT=9500
+SESSION_SECRET=YOUR_SESSION_SECRET_KEY
+OIDC_PUBLIC_KEY_BASE64=YOUR_OIDC_PUBLIC_KEY_ENCODED_IN_BASE64
 OIDC_PRIVATE_KEY_BASE64=YOUR_OIDC_PRIVATE_KEY_ENCODED_IN_BASE64
-
-OIDC_KID=YOUR_OIDC_KID ( e.g., n42m3ljfidlnm43290f3021 )
-
+OIDC_KID=YOUR_OIDC_KID
 ALLOWED_CLIENT_ID=smart-client-sample-client-id
-ALLOWED_CLIENT_SECRET=smart-client-sample-client-secret
+ALLOWED_CLIENT_SECRET=smart-client-sample-client-secret`
+
+For SESSION_SECRET, use any UUID-like private string.
 
 ### OIDC Keys generation
 
@@ -39,6 +39,8 @@ Run npm run cert to generate a private key and public key for the OIDC server. T
 The OIDC_KID value is typically derived from the JWK representation of the public key. The exact method of deriving the Kid value can vary, but one common approach is to use a hash function (such as SHA-256) to hash the JWK representation of the public key, and then use the resulting hash as the Kid value.
 
 ### Running the SMART server
+
+Start by running "npm install" in this project directory. Ensure you also have the .env file in this project directory, configured as described above.
 
 To run it, use the "smart-server" target in the VS Code debugger, or run "npm run smart-server" in the command line or use the launch.json's "src/smart-server/src/main.ts" target in the VS Code debugger. This will start the SMART server on the specified port.
 
@@ -53,3 +55,12 @@ Then, run ngrok with the following command:
 ngrok http YOUR_PORT
 
 This will create a temporary public HTTPS URL for your SMART server. Copy and paste the HTTPS URL into the "Webhook Endpoint - Request URL" field in Ocean Admin Portal.
+
+### Points of Configuration
+
+There are several areas within this project that a real EMR will want to adapt in particular:
+
+- patient-service.ts - to handle the loading of patient data from the database
+- patient-everything-fhir-handler.ts and patient-fhir-handler.ts - to customize the fetching and mapping of patient FHIR resources from the EMR/EHR's database and domain model
+- client-service.ts - used to determine which SMART app clients (as determined by client_id and client_secret) are supported by this SMART server.
+- authorization-code-service - used to generate and store authorization codes for OAuth2. This is an in-memory reference implementation only.

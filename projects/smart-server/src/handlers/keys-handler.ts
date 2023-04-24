@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import { pem2jwk } from "pem-jwk";
 import { OIDC_KID, OIDC_PRIVATE_KEY } from "../env";
 
+if (!OIDC_PRIVATE_KEY) {
+  throw new Error("Missing OIDC_PRIVATE_KEY environment variable.");
+}
 const JWK = pem2jwk(OIDC_PRIVATE_KEY);
 const publicJwk = {
   alg: "RS256",
