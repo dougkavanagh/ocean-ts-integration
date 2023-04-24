@@ -98,15 +98,21 @@ async function fetchAndValidateTokenWithOIDC(
   );
   logger.info(`creds: ${CLIENT_ID} ${CLIENT_SECRET}`);
   const issuer: Issuer<Client> = await Issuer.discover(issuerUrl);
+  const client_secret = CLIENT_SECRET;
   const client = new issuer.Client({
     client_id: CLIENT_ID,
-    client_secret: CLIENT_SECRET ?? undefined,
+    client_secret,
     token_endpoint_auth_method: "none",
   });
   //https://github.com/panva/node-openid-client/blob/main/docs/README.md#clientcallbackredirecturi-parameters-checks-extras
   client.grant({
     grant_type: "authorization_code",
     code: req.query.code,
+    extras: {
+      clientAssertionPayload: {
+        client_secret,
+      },
+    },
   });
   const params = client.callbackParams(req);
   try {
