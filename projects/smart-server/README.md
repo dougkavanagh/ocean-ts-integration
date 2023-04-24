@@ -2,19 +2,33 @@
 
 This project is a reference implementation for a SMART launch server (EHR/EMR).
 The server in this project is intended to act as the OIDC/SMART-compatible EMR/EHR launching Ocean, as described in the documentation guide:
-[Ocean SMART App Launch Overview](<[https://](https://support.cognisantmd.com/hc/en-us/articles/360057458272-Ocean-SMART-App-Launch-SMART-on-FHIR-EHR-Contextual-Launch-)>)
+[Ocean SMART App Launch Overview](https://support.cognisantmd.com/hc/en-us/articles/360057458272-Ocean-SMART-App-Launch-Overview-SMART-on-FHIR-EHR-Contextual-Launch-).
 
-Building a SMART server is complicated, especially one that supports OIDC for single sign-on. This project aims to demystify the process by providing a reference implementation that can be used as a starting point for your own SMART server. It is not intended to be a production-ready server, but rather a starting point for your own implementation.
+Building a SMART server is complicated, especially one that supports OIDC for single sign-on. In addition to FHIR endpoints for patient resources, additional endpoints are required to support OAuth2 and the [OIDC identity validation](https://openid.net/specs/openid-connect-core-1_0.html). This project aims to demystify the process by providing an end-to-end reference implementation that can be used as a starting point for your own SMART server. It is not intended to be a production-ready server, but rather a starting point for your own implementation.
 
 This SMART server example may also be useful for testing a SMART client app that relies on OIDC for single sign-on from the EMR.
 
 This project is inspired by the official [SMART on FHIR Launch Server](https://github.com/smart-on-fhir/smart-launcher) project, which is a Javascript reference implementation. However, this project expands on the official project by providing:
 
-- a simplified TypeScript implementation which the author believes is easier to understand and modify.
+- a simplified TypeScript implementation
 - a parallel smart-client implementation for testing end-to-end OIDC-based single sign-on.
 - Ocean-specific configuration considerations
-- A limited reference implementation of relevant FHIR endpoints (Patient, $everything, etc.)
+- a limited reference implementation of relevant FHIR endpoints (Patient, $everything, etc.)
 - support for serverless (just wrap the main.ts express code in a function handler)
+
+## Overview
+
+The main.ts file sets up listeners for the following endpoints necessary to support a basic SSO SMART launch:
+
+| Endpoint                               | Description                                                                                                                         |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| /auth/authorize                        | OAuth2 authorization endpoint. This is the endpoint that the SMART client will call to initiate the OAuth2 authorization flow.      |
+| /auth/token                            | OAuth2 token endpoint. This is the endpoint that the SMART client will call to exchange the authorization code for an access token. |
+| /auth/keys                             | OIDC endpoint for retrieving the public key used to sign the JWT tokens                                                             |
+| /fhir/.well-known/openid-configuration | OIDC endpoint for retrieving the OIDC configuration                                                                                 |
+| /fhir/.well-known/smart-configuration  | SMART endpoint for retrieving the SMART configuration                                                                               |
+| /fhir/Patient/[id]                     | FHIR endpoint for retrieving a Patient resource by patient ID                                                                       |
+| /fhir/Patient/[id]/$everything         | FHIR endpoint for retrieving a Bundle resource containing the Patient and all related resources by patient ID.                      |
 
 ## Getting Started
 
@@ -44,7 +58,9 @@ Start by running "npm install" in this project directory. Ensure you also have t
 
 To run it, use the "smart-server" target in the VS Code debugger, or run "npm run smart-server" in the command line or use the launch.json's "src/smart-server/src/main.ts" target in the VS Code debugger. This will start the SMART server on the specified port.
 
-The SMART server will start up and then pretend as if it is an EHR/EMR that has just launched the SMART app. Imagine a signed-in user who has just clicked a "Launch Ocean" button in a patient chart. The SMART server generates the URL that would be supplied to the web browser to open the SMART client. To test it out, open the URL in a web browser and ensure it points to a live, accessible SMART client app server (such as the smart-client project in this repo).
+The SMART server will start up and then pretend as if it is an EHR/EMR that has just launched the SMART app. Imagine a signed-in user who has just clicked a "Launch Ocean" button in a patient chart. The SMART server generates the URL that would be supplied to the web browser to open the SMART client.
+
+To test it out, open the URL in a web browser and ensure it points to a live, accessible SMART client app server (such as the smart-client project in this repo).
 
 ### Testing with ngrok
 

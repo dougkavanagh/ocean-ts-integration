@@ -83,11 +83,12 @@ function createAuthRouter() {
   const authRouter = express.Router();
   authRouter.all("/authorize", handleAuthorizeRequest);
   authRouter.post("/token", handleTokenRequest);
-  app.get("/keys", handleKeysRequest);
+  authRouter.get("/keys", handleKeysRequest);
   app.use("/auth", authRouter);
 }
 
 function createFhirRoutes(fhirRouter: Router) {
+  PatientFhirHandler.setup(fhirRouter);
   PatientFhirHandler.setup(fhirRouter);
   WellKnownOidcConfigurationHandler.setup(fhirRouter);
   WellKnownSmartConfigurationHandler.setup(fhirRouter);

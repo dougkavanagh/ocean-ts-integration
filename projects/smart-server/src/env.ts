@@ -39,7 +39,7 @@ export const FHIR_SERVER_URL = SERVER_URL + FHIR_ENDPOINT_PREFIX;
 export const AUTHORIZE_URL = SERVER_URL + AUTH_ENDPOINT_PREFIX + "/authorize";
 export const TOKEN_URL = SERVER_URL + AUTH_ENDPOINT_PREFIX + "/token";
 export const TOKEN_ISSUER_URL = SERVER_URL + AUTH_ENDPOINT_PREFIX;
-export const KEYS_URL = SERVER_URL + "/keys";
+export const KEYS_URL = SERVER_URL + AUTH_ENDPOINT_PREFIX + "/keys";
 
 export const SMART_CLIENT_URL =
   envs?.SMART_CLIENT_URL ?? `http://localhost:9501/launch`;
