@@ -34,7 +34,7 @@ For SESSION_SECRET, use any UUID-like private string.
 
 ### OIDC Keys generation
 
-Run npm run cert to generate a private key and public key for the OIDC server. The private key will be saved to the file "private-key.pem" and the public key will be saved to the file "public-key.pem". Copy the contents of these files into the ".env" file.
+Run `npm run cert` to generate a private key and public key for the OIDC server. The private key will be saved to the file "private-key.pem" and the public key will be saved to the file "public-key.pem". It also encodes them as separate Base64 files. Copy the contents of the public-key-base64.txt into the OIDC_PUBLIC_KEY_BASE64 env var and the contents of the private-key-base64.txt into the OIDC_PRIVATE_KEY_BASE64 env var.
 
 The OIDC_KID value is typically derived from the JWK representation of the public key. The exact method of deriving the Kid value can vary, but one common approach is to use a hash function (such as SHA-256) to hash the JWK representation of the public key, and then use the resulting hash as the Kid value.
 
