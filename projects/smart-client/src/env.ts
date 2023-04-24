@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 const parsed = config().parsed;
 
-export const PORT = parsed?.PORT ?? "8888";
+export const PORT = parsed?.PORT ?? "9501";
 export const TEST_LAUNCH_CONTEXT = parsed?.TEST_LAUNCH_CONTEXT ?? "";
 export const FHIR_SERVER_URL =
   parsed?.FHIR_SERVER_URL ?? "https://your.smart.server";

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "ts-node src/main.ts",
-    "cert": "openssl genrsa -out private-key.pem 2048 && openssl rsa -in private-key.pem -outform PEM -pubout -out public-key.pem"
+    "cert": "openssl genrsa -out private-key.pem 2048 && openssl rsa -in private-key.pem -outform PEM -pubout -out public-key.pem && cat private-key.pem | base64 > private-key-base64.txt && cat public-key.pem | base64 > public-key-base64.txt && cat public-key-base64.txt | awk '{print $1}' > oidc_kid.txt"
   },
   "devDependencies": {
     "@types/base64-url": "^2.2.0",
