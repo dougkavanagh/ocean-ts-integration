@@ -108,11 +108,7 @@ async function fetchAndValidateTokenWithOIDC(
   client.grant({
     grant_type: "authorization_code",
     code: req.query.code,
-    extras: {
-      clientAssertionPayload: {
-        client_secret,
-      },
-    },
+    client_secret: client_secret,
   });
   const params = client.callbackParams(req);
   try {

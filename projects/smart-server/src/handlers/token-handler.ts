@@ -10,7 +10,7 @@ import base64url from "base64-url";
 import { ClientService } from "../client-service";
 
 export async function handleTokenRequest(req: Request, res: Response) {
-  const { client_id, client_secret, grant_type, code, code_verifier, scope } =
+  const { client_id, client_secret, grant_type, code, code_verifier } =
     req.body;
   logger.info("Handling token request");
   const contentType = req.header("content-type");
@@ -62,23 +62,23 @@ async function handleAuthorizationCode(args: {
   const storedAuthCode = await AuthorizationCodeService.findAndRemoveById(
     providedAuthCode.id
   );
-  logger.info("Got auth code " + storedAuthCode?.id + " from db");
+  logger.info("Fetched auth code " + storedAuthCode?.id + " from db");
   if (!storedAuthCode) {
-    return res.status(401).send("Invalid authorization code");
+    return sendAuthError(res, "Invalid authorization code");
   }
   if (storedAuthCode.expiresAt < new Date()) {
-    return res.status(401).send("Authorization code has expired");
+    return sendAuthError(res, "Authorization code has expired");
   }
   if (storedAuthCode.codeChallenge) {
     if (!code_verifier) {
-      return res.status(401).send("Authorization code_verifier is missing");
+      return sendAuthError(res, "Authorization code_verifier is missing", 400);
     }
     if (code_verifier.length < 43) {
-      return res
-        .status(400)
-        .send(
-          "Authorization code_verifier is too short (must be at least 43 characters)"
-        );
+      return sendAuthError(
+        res,
+        "Authorization code_verifier is too short (must be at least 43 characters)",
+        400
+      );
     }
     const codeChallenge = crypto
       .createHash("sha256")
@@ -88,7 +88,7 @@ async function handleAuthorizationCode(args: {
       codeChallenge !==
       Buffer.from(storedAuthCode.codeChallenge, "base64").toString("base64")
     ) {
-      return res.status(401).send("Authorization code challenge failed");
+      return sendAuthError(res, "Authorization code challenge failed");
     }
   }
   // recommended client validation:
@@ -125,6 +125,14 @@ async function handleAuthorizationCode(args: {
     scopes: storedAuthCode.scopes,
     extraContext: await getExtraContext(storedAuthCode),
   });
+}
+
+function sendAuthError(
+  res: Response<any, Record<string, any>>,
+  error: string,
+  status = 401
+) {
+  return res.status(status).send(error);
 }
 
 function sendAccessToken({
