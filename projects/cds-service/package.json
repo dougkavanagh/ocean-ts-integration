@@ -19,7 +19,7 @@
     "jsonwebtoken": "^9.0.0",
     "jwk-to-pem": "^2.0.5",
     "jwks-rsa": "^3.0.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.11",
     "openid-client": "^4.9.0",
     "pem-jwk": "^2.0.0"
   }

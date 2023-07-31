@@ -3,7 +3,7 @@ import logger from "./logger";
 
 // https://cds-hooks.org/cheat-sheet/Cheat%20Sheet%20-%20Sept%202019.pdf
 
-const handler: RequestHandler = async (
+export const orderSignHookHandler: RequestHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -63,4 +63,3 @@ const handler: RequestHandler = async (
     next(e);
   }
 };
-export default handler;

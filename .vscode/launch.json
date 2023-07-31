@@ -78,6 +78,19 @@
 			"args": [
 				"${workspaceFolder}/projects/webhook-server/main.ts"
 			]
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "cds-service/src/main.ts",
+			"runtimeArgs": [
+				"-r",
+				"ts-node/register"
+			],
+			"args": [
+				"${workspaceFolder}/projects/cds-service/src/main.ts"
+			],
+			"cwd": "${workspaceFolder}/projects/cds-service"
 		}
 	]
 }
