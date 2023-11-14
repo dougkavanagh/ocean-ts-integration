@@ -42,4 +42,6 @@ export const TOKEN_ISSUER_URL = SERVER_URL + AUTH_ENDPOINT_PREFIX;
 export const KEYS_URL = SERVER_URL + AUTH_ENDPOINT_PREFIX + "/keys";
 
 export const SMART_CLIENT_URL =
-  envs?.SMART_CLIENT_URL ?? `http://localhost:9501/launch`;
+  envs?.SMART_CLIENT_URL ?? `http://localhost:8080/sso/smart/auth`;
+
+export const OCEAN_ACTION = envs?.OCEAN_ACTION ?? "viewMap";
