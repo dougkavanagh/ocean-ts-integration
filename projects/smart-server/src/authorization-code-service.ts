@@ -44,7 +44,7 @@ async function createFromLaunchToken(
     encounter,
     siteId,
     expiresAt: expiresAt(),
-    idTokenIssuer: iss,//
+    idTokenIssuer: iss,
     codeChallenge: codeChallenge,
     codeChallengeMethod: codeChallengeMethod,
     scopes: scopes,
