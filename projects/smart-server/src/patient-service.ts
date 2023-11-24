@@ -1,5 +1,6 @@
 import { fhirR4 } from "@smile-cdr/fhirts";
 import { SessionContext } from "./auth-utils";
+import { SITE_ID } from "./env";
 
 async function loadPatient(
   context: SessionContext,
@@ -215,7 +216,7 @@ async function loadPatient(
     deceasedBoolean: false,
     deceasedDateTime: undefined,
   };
-  if (!context || context.user?.siteId !== "1234") {
+  if (!context || context.user?.siteId !== SITE_ID) {
     throw new Error(
       `This site ${context.user?.siteId} does not have access to this patient resource`
     );

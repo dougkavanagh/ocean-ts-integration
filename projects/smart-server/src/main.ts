@@ -11,7 +11,10 @@ import {
   AUTH_ENDPOINT_PREFIX,
   FHIR_ENDPOINT_PREFIX,
   PORT,
-  OCEAN_ACTION
+  OCEAN_ACTION,
+  SITE_ID,
+  USER_ID,
+  OCEAN_RESOURCE,
 } from "./env";
 import { verifyBearerToken } from "./auth-utils";
 import { isErrorMessage } from "./core";
@@ -134,8 +137,8 @@ app.listen(PORT, () => {
   const smartLaunchUrl = createSmartLaunchUrl({
     context: {
       user: {
-        userId: "user12345",
-        siteId: "site12345",
+        userId: USER_ID,
+        siteId: SITE_ID,
         profile: {
           displayName: "Test User",
         },
@@ -144,6 +147,7 @@ app.listen(PORT, () => {
     ptId: "pt12345",
     clientSiteNum: OCEAN_TEST_SITE_NUM,
     action: OCEAN_ACTION,
+    resource: OCEAN_RESOURCE,
   });
   console.log(
     `Clicking this button in EMR opens the following SMART launch URL in a new tab in the user's default web browser:\n${smartLaunchUrl}`

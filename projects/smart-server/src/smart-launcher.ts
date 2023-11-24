@@ -7,11 +7,13 @@ export function createSmartLaunchUrl({
   ptId,
   action,
   clientSiteNum,
+  resource,
 }: {
   context: SessionContext;
   ptId?: string;
   action?: string;
   clientSiteNum?: string;
+  resource?: string;
 }) {
   const userId = context.user?.userId;
   if (!userId) {
@@ -38,6 +40,8 @@ export function createSmartLaunchUrl({
     (clientBaseLaunchUrl.includes("?") ? "&" : "?") +
     `iss=${encodeURIComponent(
       FHIR_SERVER_URL
-    )}&launch=${launch}&action=${action}&siteNum=${clientSiteNum}`;
+    )}&launch=${launch}&action=${action}${
+      resource ? "&resource=" + resource : ""
+    }&siteNum=${clientSiteNum}`;
   return url;
 }

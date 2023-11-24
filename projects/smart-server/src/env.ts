@@ -45,3 +45,6 @@ export const SMART_CLIENT_URL =
   envs?.SMART_CLIENT_URL ?? `http://localhost:8080/sso/smart/auth`;
 
 export const OCEAN_ACTION = envs?.OCEAN_ACTION ?? "viewMap";
+export const OCEAN_RESOURCE = envs?.OCEAN_RESOURCE ?? "";
+export const USER_ID = envs?.SITE_ID ?? "user1234";
+export const SITE_ID = envs?.SITE_ID ?? "site12345";
