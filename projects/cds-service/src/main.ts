@@ -22,8 +22,11 @@ app.use(errorHandler);
 app.use(express.json());
 // https://cds-hooks.org/quickstart/
 
-app.get("cds-services", cdsServicesHandler);
-app.post("cds-services/ocean-order-sign", orderSignHookHandler);
+app.get("/cds-services", cdsServicesHandler);
+app.post(
+  "/cds-services/" + OCEAN_EORDER_DECISION_SUPPORT_ID,
+  orderSignHookHandler
+);
 
 app.listen(PORT, () => {
   logger.info(`CDS services server is listening at ${HOST}`);

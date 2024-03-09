@@ -1,4 +1,6 @@
-### Test your SMART launch server
+### Test CDS Hooks Server
+
+This project is designed to as a simple overview and test hub for Ocean's invocation of CDS services, particularly for eOrdering validation.
 
 This SMART client behaves similarly to Ocean's SMART client application, particularly with the network sequence flow described in the documentation guide:
 [Ocean SMART App Launch Overview](https://support.cognisantmd.com/hc/en-us/articles/360057458272-Ocean-SMART-App-Launch-SMART-on-FHIR-EHR-Contextual-Launch-)
@@ -9,46 +11,14 @@ The client simulates the launch sequence that your EHR will perform; then, once 
 
 #### Setup
 
-To begin, specify your SMART "iss" server in .env, e.g.:
-FHIR_SERVER_URL=http://localhost:59468/api/fhir
+To begin, run
+npm i
 
-You will also need to specify your server's OAuth2 credentials for this SMART test client in .env:
+You can change the default port in a .env file if necessary.
 
-CLIENT_ID=your_client_id
-CLIENT_SECRET=your_client_secret (optional)
+#### Execution
 
-To run it, run "npm run smart-client" in the command line or use the launch.json's "src/smart-client/src/main.ts" target in the VS Code debugger.
+To run it, run "npm run serve" in the command line or use the launch.json's "src/cds-service/src/main.ts" target in the VS Code debugger.
 
-#### Step 1: Launch Sequence
-
-The program will generate a suggested launch URL, simulating what your EHR would do. Copy and paste this URL into your browser to test the launch sequence. After your browser issues an HTTP GET call as defined by this URL, the program runs code in launch-handler.ts.
-
-#### Step 2: OIDC Discovery
-
-- The launch-handler.ts uses the open-source openid-client to "discover" the OIDC endpoints for your SMART server:
-- The client first attempts to locate the openid-configuration endpoint by appending "/.well-known/openid-configuration" to the "iss" URL, as defined in the OIDC specification.
-- Once the OIDC endpoints are discovered, the client redirects the browser to your server's published "authorize" endpoint to request an authorization code.
-
-#### Step 3: OIDC/SMART Authorization Redirect
-
-- The browser is redirected to the "authorize" endpoint on your EMR/EHR, which may prompt the user to login and authorize the client application (if not already signed in). After this, your server should redirect the user back to the smart-client's "redirect_uri" with an authorization code.
-
-#### Step 4: OIDC/SMART Redirect Handling
-
-- Once the authorization code is received, the client (redirect-handler.ts) uses the "token" endpoint to request an access token, using the authorization_code grant type, the authorization code received in the redirect, and the client_id and client_secret credentials.
-
-#### Step 5: OIDC Validation of id_token
-
-- The client then validates the id_token, which is a JWT token that contains the user's identity and other information. The client uses the "jwks_uri" endpoint defined in the openid-configuration to retrieve the public key used to sign the token, and then validates the signature and other claims (checkOIDC).
-
-#### Step 6: Ocean-specific Validation of token
-
-Once OIDC's validation is successful, the client checks for the presence of additional values in the token that are relevant to Ocean, specifically:
-
-- _sub_: the user's unique identifier, used in combination with the issuer to uniquely identify the user and link the Ocean user account for single sign-on)
-- _patient_: if a patient context should be included in the launch, this should match the EMR patient ID
-- _oceanSharedEncryptionKey_: as described in the Ocean SMART Launch Overview, this is a Base64 encoding of the shared encryption key password, to save users the hassle of entering the Ocean shared encryption key at their site in each user browser.
-
-#### Step 7: FHIR Client Queries
-
-Once the OIDC validation is complete, the client will use the access token to make FHIR API calls to your server. Ocean will GET from the FHIR Patient endpoint and the Patient/$everything operation to retrieve and validate the patient's demographics and other information.
+This will run the server and the main.ts test file, which starts by requesting the available cds-services at the host endpoint.
+It then calls the order-sign hook.

@@ -16,6 +16,7 @@ app.use(
 const router = express.Router();
 
 router.get("", (_, res: Response) => {
+  console.info("Received webhook GET request");
   res.send(
     "This is the webhook endpoint GET handler. It's expecting a POST for a challenge reply or a service request payload"
   );
