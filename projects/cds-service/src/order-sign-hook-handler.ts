@@ -9,9 +9,11 @@ export const orderSignHookHandler: RequestHandler = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    logger.info(`hook-handler`);
+    logger.info(`order-sign hook-handler`);
     const body = req.body;
-
+    logger.info(`received ${body}`);
+    // this part would do the validation of the order form...
+    // resopnd with fake suggestions:
     res.status(200).json({
       cards: [
         // https://cds-hooks.hl7.org/2.0/#card-attributes

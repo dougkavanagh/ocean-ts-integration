@@ -11,10 +11,11 @@ The client simulates the launch sequence that your EHR will perform; then, once 
 
 #### Setup
 
-To begin, run
+To begin, cd to the directory and run:
+
 npm i
 
-You can change the default port in a .env file if necessary.
+The port defaults to 9501 but you can change it via a .env file if necessary.
 
 #### Execution
 

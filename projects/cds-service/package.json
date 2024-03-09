@@ -1,26 +1,19 @@
 {
-  "name": "smart-client",
+  "name": "cds-service",
   "version": "1.0.0",
-  "description": "SMART client application",
+  "description": "CDS Hook Server and Test Service",
   "scripts": {
     "build": "tsc",
     "serve": "ts-node src/main.ts"
   },
   "devDependencies": {
-    "@types/cookie-parser": "^1.4.3",
-    "@types/cors": "^2.8.13",
-    "@types/jsonwebtoken": "^9.0.0"
+    "@types/cors": "^2.8.13"
   },
   "dependencies": {
     "base64-url": "^2.3.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "jsonwebtoken": "^9.0.0",
-    "jwk-to-pem": "^2.0.5",
-    "jwks-rsa": "^3.0.0",
-    "node-fetch": "^2.6.11",
-    "openid-client": "^4.9.0",
-    "pem-jwk": "^2.0.0"
+    "node-fetch": "^2.6.11"
   }
 }
