@@ -35,6 +35,16 @@
 				"cwd": "${workspaceFolder}/projects/smart-server"
 			},
 			"problemMatcher": []
+		},
+		{
+			"label": "Run ngrok against 8888",
+			"type": "shell",
+			"command": "ngrok http 8888",
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"problemMatcher": []
 		}
 	]
 }
