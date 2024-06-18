@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import { PORT } from "./env";
+import fs from "fs";
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -40,6 +41,8 @@ router.post("", async (req: Request, res: Response): Promise<void> => {
     res.status(200).type("application/json").send({
       success: true,
     });
+    // write the body to a json file:
+    fs.writeFileSync(`payload-${body.id}.json`, JSON.stringify(body, null, 2));
   } else {
     console.info("Received unexpected payload");
     res.status(400).type("application/json").send({
