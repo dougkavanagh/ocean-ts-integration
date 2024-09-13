@@ -1,0 +1,902 @@
+{
+  "resourceType": "Bundle",
+  "id": "d8382866-ad6b-4499-a70f-cf170e55600f",
+  "meta": {
+    "lastUpdated": "2024-06-24T09:35:42.730-04:00",
+    "security": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        "code": "HTEST",
+        "display": "test health data"
+      }
+    ]
+  },
+  "type": "message",
+  "timestamp": "2024-06-24T09:35:42.730-04:00",
+  "entry": [
+    {
+      "fullUrl": "7f1460c8-4ab0-4ee3-9ba5-ee7f1119b78f",
+      "resource": {
+        "resourceType": "MessageHeader",
+        "id": "7f1460c8-4ab0-4ee3-9ba5-ee7f1119b78f",
+        "meta": {
+          "profile": [
+            "http://ehealthontario.ca/fhir/StructureDefinition/ca-on-eReferral-profile-MessageHeader|1.0.1"
+          ],
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://ehealthontario.ca/fhir/StructureDefinition/ext-referral-identifier",
+            "valueIdentifier": {
+              "system": "https://ocean.cognisantmd.com/svc/fhir/v1/NamingSystem/id-ereferral-reference",
+              "value": "248537d4-1be2-420d-9358-8b85ab8833cc"
+            }
+          }
+        ],
+        "eventCoding": {
+          "system": "https://ehealthontario.ca/fhir/CodeSystem/message-event-code",
+          "code": "add-service-request",
+          "display": "add-service-request"
+        },
+        "destination": [
+          {
+            "name": "Ontario Ministry of Transportation Demo Site",
+            "endpoint": "https://db7c-209-171-85-135.ngrok-free.app",
+            "receiver": {
+              "reference": "urn:uuid:91dec824-d47d-4b7b-9859-4db101fbae98"
+            }
+          }
+        ],
+        "sender": {
+          "reference": "urn:uuid:232646f8-10da-4445-957d-e559cfe8f910"
+        },
+        "author": {
+          "reference": "urn:uuid:232646f8-10da-4445-957d-e559cfe8f910"
+        },
+        "source": {
+          "name": "Ocean",
+          "endpoint": "https://ocean.cognisantmd.com/svc/fhir/v1/$process-messages"
+        },
+        "reason": {
+          "text": "Initial"
+        },
+        "focus": [
+          {
+            "reference": "urn:uuid:248537d4-1be2-420d-9358-8b85ab8833cc"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:84d58bf6-7bdc-451b-91e4-9a916bdf3e82",
+      "resource": {
+        "resourceType": "Patient",
+        "meta": {
+          "profile": [
+            "http://ehealthontario.ca/fhir/StructureDefinition/ca-on-eReferral-profile-Patient|1.0.1"
+          ],
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "identifier": [
+          {
+            "use": "official",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "JHN",
+                  "display": "Jurisdictional health number (Canada)"
+                }
+              ],
+              "text": "Personal Health Number"
+            },
+            "system": "https://fhir.infoway-inforoute.ca/NamingSystem/ca-on-patient-hcn",
+            "value": "7787788667"
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "MR",
+                  "display": "Medical record number"
+                }
+              ],
+              "text": "EMR/EHR Medical Record Number"
+            },
+            "system": "https://ocean.cognisantmd.com/svc/fhir/v1/NamingSystem/id-external-patient-reference",
+            "value": "123456"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "text": "UseCase Three",
+            "family": "Three",
+            "given": [
+              "UseCase"
+            ]
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "416-566-2222",
+            "use": "mobile"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1995-10-27",
+        "deceasedBoolean": false,
+        "address": [
+          {
+            "use": "home",
+            "type": "postal",
+            "line": [
+              "400 John St."
+            ],
+            "city": "Toronto",
+            "state": "ON",
+            "postalCode": "M5M 2X7"
+          },
+          {
+            "use": "home",
+            "type": "postal"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:91dec824-d47d-4b7b-9859-4db101fbae98",
+      "resource": {
+        "resourceType": "PractitionerRole",
+        "meta": {
+          "profile": [
+            "http://ehealthontario.ca/fhir/StructureDefinition/ca-on-eReferral-profile-PractitionerRole|1.0.0"
+          ],
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "identifier": [
+          {
+            "system": "https://ocean.cognisantmd.com/svc/fhir/v1/NamingSystem/id-referral-target-reference",
+            "value": "ontario_ministry_of_-2304011"
+          },
+          {
+            "system": "https://ocean.cognisantmd.com/svc/fhir/v1/NamingSystem/id-site-number",
+            "value": "6284"
+          }
+        ],
+        "active": true,
+        "specialty": [
+          {
+            "coding": [
+              {
+                "system": "https://fhir.infoway-inforoute.ca/CodeSystem/snomedctcaextension",
+                "code": "49634009",
+                "display": "Medical Condition Report Form Submission"
+              }
+            ]
+          }
+        ],
+        "location": [
+          {
+            "reference": "urn:uuid:3347fed9-1bd0-4818-9e86-f13e9451efcc"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:232646f8-10da-4445-957d-e559cfe8f910",
+      "resource": {
+        "resourceType": "PractitionerRole",
+        "meta": {
+          "profile": [
+            "http://ehealthontario.ca/fhir/StructureDefinition/ca-on-eReferral-profile-PractitionerRole|1.0.0"
+          ],
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "identifier": [
+          {
+            "use": "official",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "MD",
+                  "display": "Medical License number"
+                }
+              ]
+            },
+            "system": "http://infoway-inforoute.ca/fhir/NamingSystem/ca-on-license-physician",
+            "value": "95643"
+          }
+        ],
+        "active": true,
+        "practitioner": {
+          "reference": "urn:uuid:e95eaa6d-4099-4d18-984b-8cd57972e173"
+        },
+        "code": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "59058001",
+                "display": "Family Physician"
+              }
+            ]
+          },
+          {
+            "coding": [
+              {
+                "system": "https://fhir.infoway-inforoute.ca/CodeSystem/snomedctcaextension",
+                "code": "59058001",
+                "display": "Family Physician"
+              }
+            ]
+          }
+        ],
+        "location": [
+          {
+            "reference": "urn:uuid:13dd88d9-8426-4382-b69a-f6b119626eed"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "416-782-4447",
+            "use": "work"
+          },
+          {
+            "system": "fax",
+            "value": "416-782-1284",
+            "use": "work"
+          },
+          {
+            "system": "email",
+            "value": "dkavanagh@oceanmd.com",
+            "use": "work"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e95eaa6d-4099-4d18-984b-8cd57972e173",
+      "resource": {
+        "resourceType": "Practitioner",
+        "meta": {
+          "profile": [
+            "http://ehealthontario.ca/fhir/StructureDefinition/ca-on-eReferral-profile-Practitioner|1.0.0"
+          ],
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "identifier": [
+          {
+            "use": "official",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "MD",
+                  "display": "Medical License number"
+                }
+              ]
+            },
+            "system": "http://infoway-inforoute.ca/fhir/NamingSystem/ca-on-license-physician",
+            "value": "95643"
+          },
+          {
+            "system": "https://fhir.infoway-inforoute.ca/NamingSystem/ca-on-ohip-billing-id",
+            "value": "030170"
+          },
+          {
+            "system": "https://ocean.cognisantmd.com/svc/fhir/v1/NamingSystem/id-practitioner-username",
+            "value": "dkavanagh"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "family": "Kavanagh",
+            "given": [
+              "Doug"
+            ]
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "416-782-4447",
+            "use": "work"
+          },
+          {
+            "system": "fax",
+            "value": "416-782-1284",
+            "use": "work"
+          },
+          {
+            "system": "email",
+            "value": "dkavanagh@oceanmd.com",
+            "use": "work"
+          }
+        ],
+        "address": [
+          {
+            "use": "work",
+            "type": "both",
+            "line": [
+              "3080 Yonge St",
+              "#5080"
+            ],
+            "city": "Toronto",
+            "state": "ON",
+            "postalCode": "M4N 3N1"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:13dd88d9-8426-4382-b69a-f6b119626eed",
+      "resource": {
+        "resourceType": "Location",
+        "meta": {
+          "profile": [
+            "http://ehealthontario.ca/fhir/StructureDefinition/ca-on-eReferral-profile-Location|1.0.1"
+          ],
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "active",
+        "mode": "instance",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "416-782-4447",
+            "use": "work"
+          },
+          {
+            "system": "fax",
+            "value": "416-782-1284",
+            "use": "work"
+          },
+          {
+            "system": "email",
+            "value": "dkavanagh@oceanmd.com",
+            "use": "work"
+          }
+        ],
+        "address": {
+          "use": "work",
+          "type": "physical",
+          "line": [
+            "3080 Yonge St",
+            "#5080"
+          ],
+          "city": "Toronto",
+          "state": "ON",
+          "postalCode": "M4N 3N1"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:3347fed9-1bd0-4818-9e86-f13e9451efcc",
+      "resource": {
+        "resourceType": "Location",
+        "meta": {
+          "profile": [
+            "http://ehealthontario.ca/fhir/StructureDefinition/ca-on-eReferral-profile-Location|1.0.1"
+          ],
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "status": "active",
+        "mode": "instance",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "1-800-268-1481",
+            "use": "work"
+          },
+          {
+            "system": "fax",
+            "value": "1-800-304-7889",
+            "use": "work"
+          }
+        ],
+        "address": {
+          "use": "work",
+          "type": "physical",
+          "line": [
+            "777 Bay St",
+            "5th Floor"
+          ],
+          "city": "Toronto",
+          "state": "ON",
+          "postalCode": "M7A 1Z8"
+        },
+        "position": {
+          "longitude": -79.3844223022461,
+          "latitude": 43.660484313964844
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:aba11e47-da70-4a0f-94d0-335516f26012",
+      "resource": {
+        "resourceType": "DocumentReference",
+        "meta": {
+          "profile": [
+            "http://ehealthontario.ca/fhir/StructureDefinition/ca-on-eReferral-profile-DocumentReference|1.0.0"
+          ],
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "identifier": [
+          {
+            "system": "https://ocean.cognisantmd.com/svc/fhir/v1/NamingSystem/id-ereferral-reference",
+            "value": "248537d4-1be2-420d-9358-8b85ab8833cc"
+          }
+        ],
+        "status": "current",
+        "date": "2024-06-24T09:35:32.815-04:00",
+        "content": [
+          {
+            "attachment": {
+              "contentType": "application/pdf",
+              "url": "https://ocean.cognisantmd.com/svc/fhir/v1/ServiceRequest/248537d4-1be2-420d-9358-8b85ab8833cc/$letter",
+              "title": "UseCase Three-Doug's Site-2024-06-24.pdf",
+              "creation": "2024-06-24T09:35:32-04:00"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:248537d4-1be2-420d-9358-8b85ab8833cc",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "meta": {
+          "profile": [
+            "http://ehealthontario.ca/fhir/StructureDefinition/ca-on-eReferral-profile-ServiceRequest|1.0.1"
+          ],
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "identifier": [
+          {
+            "system": "https://ocean.cognisantmd.com/svc/fhir/v1/NamingSystem/id-ereferral-reference",
+            "value": "248537d4-1be2-420d-9358-8b85ab8833cc"
+          }
+        ],
+        "status": "active",
+        "intent": "proposal",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "49634009",
+                "display": "MISCELLANEOUS"
+              }
+            ]
+          }
+        ],
+        "priority": "routine",
+        "subject": {
+          "reference": "urn:uuid:84d58bf6-7bdc-451b-91e4-9a916bdf3e82"
+        },
+        "authoredOn": "2024-06-24T09:35:32-04:00",
+        "requester": {
+          "reference": "urn:uuid:232646f8-10da-4445-957d-e559cfe8f910"
+        },
+        "performer": [
+          {
+            "reference": "urn:uuid:91dec824-d47d-4b7b-9859-4db101fbae98"
+          }
+        ],
+        "supportingInfo": [
+          {
+            "reference": "urn:uuid:aba11e47-da70-4a0f-94d0-335516f26012"
+          },
+          {
+            "reference": "urn:uuid:3fb50811-f172-4b2a-a1de-4f96846f0340"
+          }
+        ],
+        "note": [
+          {
+            "authorReference": {
+              "reference": "urn:uuid:e95eaa6d-4099-4d18-984b-8cd57972e173"
+            },
+            "time": "2024-06-24T09:35:32-04:00",
+            "text": "<u><b>Ministry of Transportation - Medical Condition Report<br><br></b></u><b><br>Part 2. Practitioner's Information<br></b>I am this person's: Family/Treating Physician<br>Patient is aware of this report: Yes<br>I approve of the ministry releasing this report to the patient or their legal representative if requested: Yes<br>I wish to be notified if my patient requests a copy of this report from the ministry, as releasing this report may threaten the health or safety of the patient or another individual: <b><font color=\"#008800\">Yes</font></b><br>Date of Report Examination: 2024-06-24<br><b><br>Part 3. Medication Condition or Impairment<br></b><b>Sudden Incapacitation</b><br><i>Other</i><br>Other (Specify)<br>Progressive ataxia&nbsp;"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:3fb50811-f172-4b2a-a1de-4f96846f0340",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "meta": {
+          "profile": [
+            "http://ehealthontario.ca/fhir/StructureDefinition/ca-on-eReferral-profile-QuestionnaireResponse|1.0.0"
+          ],
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "code": "HTEST",
+              "display": "test health data"
+            }
+          ]
+        },
+        "identifier": {
+          "system": "https://ocean.cognisantmd.com/svc/fhir/v1/NamingSystem/id-form-reference",
+          "value": "mto_reporting_form_d"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "urn:uuid:84d58bf6-7bdc-451b-91e4-9a916bdf3e82"
+        },
+        "author": {
+          "reference": "urn:uuid:e95eaa6d-4099-4d18-984b-8cd57972e173"
+        },
+        "item": [
+          {
+            "linkId": "mainSection"
+          },
+          {
+            "linkId": "questionnaire"
+          },
+          {
+            "linkId": "item69888056",
+            "text": "untitled"
+          },
+          {
+            "linkId": "item69266945",
+            "text": "Mandatory report by a prescribed person in compliance with subsection 203 (1) of the <i>Highway Traffic Act</i>, or Discretionary report in relation to subsection 203 (2) of the <i>Highway Traffic Act</i>."
+          },
+          {
+            "linkId": "item78435139",
+            "text": "For guidance on reporting requirements:"
+          },
+          {
+            "linkId": "item62875406"
+          },
+          {
+            "linkId": "item99381582"
+          },
+          {
+            "linkId": "section14827124",
+            "text": "Part 1. Patient Information"
+          },
+          {
+            "linkId": "item58041744",
+            "text": "Driver's License Number (if available):"
+          },
+          {
+            "linkId": "section66519354",
+            "text": "Part 2. Practitioner's Information"
+          },
+          {
+            "linkId": "PractitionerRelationship",
+            "text": "I am this person's:",
+            "answer": [
+              {
+                "valueString": "Family/Treating Physician"
+              }
+            ]
+          },
+          {
+            "linkId": "PractitionerRelationship_Other"
+          },
+          {
+            "linkId": "item88015708",
+            "text": "Patient is aware of this report:",
+            "answer": [
+              {
+                "valueString": "Y"
+              }
+            ]
+          },
+          {
+            "linkId": "item99522844",
+            "text": "I approve of the ministry releasing this report to the patient or their legal representative if requested:",
+            "answer": [
+              {
+                "valueString": "Y"
+              }
+            ]
+          },
+          {
+            "linkId": "item1427824",
+            "text": "I wish to be notified if my patient requests a copy of this report from the ministry, as releasing this report may threaten the health or safety of the patient or another individual:",
+            "answer": [
+              {
+                "valueString": "Y"
+              }
+            ]
+          },
+          {
+            "linkId": "item6398146",
+            "text": "Date of Report Examination:",
+            "answer": [
+              {
+                "valueString": "2024-06-24"
+              }
+            ]
+          },
+          {
+            "linkId": "section45350164",
+            "text": "Part 3. Medication Condition or Impairment - Check all that apply"
+          },
+          {
+            "linkId": "section26518602",
+            "text": "Cognitive Impairment"
+          },
+          {
+            "linkId": "ci",
+            "text": "A disorder resulting in cognitive impairment that affects attention, judgement and problem solving, planning and sequencing, memory, insight, reaction time or visuospatial perception, and results in substantial limitation of the person’s ability to perform activities of daily living. <b>Due to:</b>"
+          },
+          {
+            "linkId": "item30323783",
+            "text": "Dementia"
+          },
+          {
+            "linkId": "item9380613",
+            "text": "Brain Injury/Tumour"
+          },
+          {
+            "linkId": "item89663724",
+            "text": "Unknown"
+          },
+          {
+            "linkId": "cognitiveImpairment_other",
+            "text": "Other (Specify)"
+          },
+          {
+            "linkId": "ci_other"
+          },
+          {
+            "linkId": "section18490152",
+            "text": "Sudden Incapacitation"
+          },
+          {
+            "linkId": "item72489500",
+            "text": "A disorder that has a moderate or high risk of sudden incapacitation, or that has resulted in sudden incapacitation and that has a moderate or high risk of recurrence. <b>Due to:</b>"
+          },
+          {
+            "linkId": "section54410401",
+            "text": "Seizure"
+          },
+          {
+            "linkId": "item60810915",
+            "text": "Alcohol/Drug Withdrawal"
+          },
+          {
+            "linkId": "item82216434",
+            "text": "Epilepsy"
+          },
+          {
+            "linkId": "item32248519",
+            "text": "Stroke"
+          },
+          {
+            "linkId": "seizure_other",
+            "text": "Other (Specify)"
+          },
+          {
+            "linkId": "item85218255"
+          },
+          {
+            "linkId": "section4073750",
+            "text": "Syncope"
+          },
+          {
+            "linkId": "item14813170",
+            "text": "Single episode not yet diagnosed"
+          },
+          {
+            "linkId": "item14747752",
+            "text": "Recurrent episodes"
+          },
+          {
+            "linkId": "item97367716",
+            "text": "Heart disease with pre-syncope/syncope/arrhythmia"
+          },
+          {
+            "linkId": "section54571045",
+            "text": "CVA resulting in (check all that apply)"
+          },
+          {
+            "linkId": "item63851807",
+            "text": "Physical Impairment"
+          },
+          {
+            "linkId": "item99950551",
+            "text": "Cognitive Impairment"
+          },
+          {
+            "linkId": "item6368951",
+            "text": "Visual Field Impairment"
+          },
+          {
+            "linkId": "section78125540",
+            "text": "Other"
+          },
+          {
+            "linkId": "item73265452",
+            "text": "Narcolepsy with uncontrolled cataplexy or daytime sleep attacks"
+          },
+          {
+            "linkId": "item50499158",
+            "text": "Obstructive sleep apnea – Untreated or Unsuccessfully Treated with Apnea-hypopnea index (AHI) of ≥30 or excessive daytime sleepiness"
+          },
+          {
+            "linkId": "item86002647",
+            "text": "Hypoglycaemia requiring intervention of third party or producing LOC"
+          },
+          {
+            "linkId": "item82420991",
+            "text": "Uncontrolled diabetes or hypoglycaemia"
+          },
+          {
+            "linkId": "other_other",
+            "text": "Other (Specify)",
+            "answer": [
+              {
+                "valueString": "Y"
+              }
+            ]
+          },
+          {
+            "linkId": "item39777063",
+            "answer": [
+              {
+                "valueString": "Progressive ataxia"
+              }
+            ]
+          },
+          {
+            "linkId": "section3343321",
+            "text": "Motor or Sensory Impairment"
+          },
+          {
+            "linkId": "item31839347",
+            "text": "A condition or disorder resulting in severe motor impairment that affects: coordination, muscle strength and control, flexibility, motor planning, touch or positional sense. <b>Due to:</b>"
+          },
+          {
+            "linkId": "item74342105",
+            "text": "Neurological Disease (Specify)"
+          },
+          {
+            "linkId": "item84436753",
+            "text": "Spinal Cord Injury"
+          },
+          {
+            "linkId": "item71491347",
+            "text": "Loss of Limb"
+          },
+          {
+            "linkId": "motor_or_sensory_other",
+            "text": "Other (Specify)"
+          },
+          {
+            "linkId": "item41576615"
+          },
+          {
+            "linkId": "section68437652",
+            "text": "Visual Impairment"
+          },
+          {
+            "linkId": "item30848267",
+            "text": "Best corrected visual acuity below 20/50 with both eyes open and examined together"
+          },
+          {
+            "linkId": "item90763979",
+            "text": "Visual field less than 120 continuous degrees along the horizontal meridian, or less than 15 continuous degrees above and below fixation, or less than 60 degrees to either side of the vertical meridian, including hemianopia."
+          },
+          {
+            "linkId": "item99718552",
+            "text": "Diplopia within 40 degrees of fixation point (in all directions) of primary position, that cannot be corrected using prism lenses or patching."
+          },
+          {
+            "linkId": "section9312844",
+            "text": "Substance Use Disorder"
+          },
+          {
+            "linkId": "item70811825",
+            "text": "A diagnosis of an uncontrolled substance use disorder, excluding caffeine and nicotine, and patient is non-compliant with treatment recommendations."
+          },
+          {
+            "linkId": "item55875377",
+            "text": "Alcohol"
+          },
+          {
+            "linkId": "substance_use_other",
+            "text": "Other Substances (Specify)"
+          },
+          {
+            "linkId": "item55177628"
+          },
+          {
+            "linkId": "section44865720",
+            "text": "Psychiatric Illness"
+          },
+          {
+            "linkId": "item3935770",
+            "text": "A condition or disorder currently involving any of the following: acute psychosis, severe abnormalities of perception, or patient has a suicidal plan involving a vehicle or an intent to use a vehicle to harm others."
+          },
+          {
+            "linkId": "psychiatric_illness",
+            "text": "<b>Due to:</b>"
+          },
+          {
+            "linkId": "item78824812"
+          },
+          {
+            "linkId": "section5582284",
+            "text": "Part 4. Discretionary report of Medical Condition or Impairment"
+          },
+          {
+            "linkId": "item79122699",
+            "text": "Please describe condition(s) or impairment:"
+          },
+          {
+            "linkId": "item6742822"
+          }
+        ]
+      }
+    }
+  ]
+}
